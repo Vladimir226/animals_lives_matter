@@ -1,0 +1,33 @@
+.profile-img
+{
+    width: 200px;
+    height: 200px;
+
+    min-width: 200px;
+
+    background-color: thistle;
+
+}
+ul{
+
+    padding: 0;
+    list-style-type: none
+}
+
+.profile
+{
+    
+
+}
+.profile-ul
+{
+    font-size: 15px;
+   
+}
+.h-reception-img
+{
+    width: 130px;
+    height: 130px; 
+
+    background-color: thistle;
+} 

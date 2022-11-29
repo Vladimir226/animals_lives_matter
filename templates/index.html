@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{%block title%} 
+ main page
+{%endblock%}
+
+{%block body%}
+<div class="profile p-3 mt-5 shadow-lg rounded-3">
+    <h3 class="profile-title mb-4">Личная информация</h3>
+    <div class="profile-container d-flex ">
+        <div class="profile-img"></div>
+        <div class="profile-info ms-3 p-2 border border-2 rounded-2 flex-grow-1">
+            <ul class="profile-ul">
+                <li class="full-name"> <h6 class="d-inline">ФИО:</h6> <div class="text d-inline">Мартыненко Владимир Александрович</div></li>
+                <li class="specialization"> <h6 class="d-inline">специальность:</h6> <div class="text d-inline">хирург</div></li>
+                <li class="count-reception"><h6 class="d-inline"> количество приёмов:</h6> <div class="text d-inline">45</div> </li>
+                <li class="about-me"><h6 class="d-inline">о себе:</h6> <div class="text d-inline">Lorem ipsum dolor sit amet,
+                     consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                     Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                       Excepteur sint occaecat cupidatat non proident,
+                     sunt in culpa qui officia deserunt mollit anim id est laborum</div> </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="list-receptions mt-5">
+    <h3 class="list-title text-center">История приёмов</h3>
+    <div class="d-flex flex-column">
+
+        <div class="h-reception shadow p-3 rounded-3 m-3">
+            <div class="h-reception-container d-flex align-items-center">
+                <div class="h-reception-img"></div>
+                <div class="h-reception-info  ms-3 p-2 border border-2 rounded-2 flex-grow-1">
+                    <ul class="h-reception-ul">
+                        <li class="phone"> <h6 class="d-inline">номер телефона клиента:</h6> <div class="text d-inline">+79991382501</div></li>
+                        <li class="creature"> <h6 class="d-inline">животное:</h6> <div class="text d-inline">собака</div></li>
+                        <li class="gender"><h6 class="d-inline">пол:</h6> <div class="text d-inline">женский</div></li>
+                        <li class="purpose"><h6 class="d-inline">цель визита:</h6> <div class="text d-inline">консультация</div></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="h-reception shadow p-3 rounded-3 m-3">
+            <div class="h-reception-container d-flex align-items-center">
+                <div class="h-reception-img"></div>
+                <div class="h-reception-info  ms-3 p-2 border border-2 rounded-2 flex-grow-1">
+                    <ul class="h-reception-ul">
+                        <li class="phone"> <h6 class="d-inline">номер телефона клиента:</h6> <div class="text d-inline">+79991382501</div></li>
+                        <li class="creature"> <h6 class="d-inline">животное:</h6> <div class="text d-inline">собака</div></li>
+                        <li class="gender"><h6 class="d-inline">пол:</h6> <div class="text d-inline">женский</div></li>
+                        <li class="purpose"><h6 class="d-inline">цель визита:</h6> <div class="text d-inline">консультация</div></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="h-reception shadow p-3 rounded-3 m-3">
+            <div class="h-reception-container d-flex align-items-center">
+                <div class="h-reception-img"></div>
+                <div class="h-reception-info  ms-3 p-2 border border-2 rounded-2 flex-grow-1">
+                    <ul class="h-reception-ul">
+                        <li class="phone"> <h6 class="d-inline">номер телефона клиента:</h6> <div class="text d-inline">+79991382501</div></li>
+                        <li class="creature"> <h6 class="d-inline">животное:</h6> <div class="text d-inline">собака</div></li>
+                        <li class="gender"><h6 class="d-inline">пол:</h6> <div class="text d-inline">женский</div></li>
+                        <li class="purpose"><h6 class="d-inline">цель визита:</h6> <div class="text d-inline">консультация</div></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+</div>
+
+{%endblock%}
