@@ -31,3 +31,54 @@ ul{
 
     background-color: thistle;
 } 
+.btn-plus-reception
+{
+    max-width: 200px;
+    height: 50px;
+    margin: 40px auto;
+
+    padding: 5px;
+    border-radius: 200px;
+
+    color: white;
+    font-weight: 700;
+
+}
+.btn-plus-reception img
+{
+    width: 40px;
+    height: 40px;
+
+    display: inline-block;
+    
+}
+.label-plus-reception
+{
+    display: inline-block;
+    
+}
+.vertical-text{
+    writing-mode: vertical-rl;
+    
+
+ }
+ .btn-h-about
+ {
+    display: flex;
+    align-items: center;
+    color: white;
+    font-weight: 500;
+
+    margin-left: 5px;
+    border-radius: 5px;
+    border: 1px solid rgb(45, 43, 43);
+
+    padding: 5px;
+
+ }
+
+ /* .profile-btn-edit
+ {
+     margin-top: 20px;
+     margin-bottom: 20px;
+ } */

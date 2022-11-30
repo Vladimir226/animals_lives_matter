@@ -6,7 +6,11 @@
 
 {%block body%}
 <div class="profile p-3 mt-5 shadow-lg rounded-3">
-    <h3 class="profile-title mb-4">Личная информация</h3>
+    <div class="profile-header d-flex justify-content-between mb-2">
+        <h3 class="profile-title">Личная информация</h3>
+        <button type="button" class="btn btn-secondary profile-btn-edit align-self-start">Изменить</button>
+    </div>
+    
     <div class="profile-container d-flex ">
         <div class="profile-img"></div>
         <div class="profile-info ms-3 p-2 border border-2 rounded-2 flex-grow-1">
@@ -31,13 +35,16 @@
         <div class="h-reception shadow p-3 rounded-3 m-3">
             <div class="h-reception-container d-flex align-items-center">
                 <div class="h-reception-img"></div>
-                <div class="h-reception-info  ms-3 p-2 border border-2 rounded-2 flex-grow-1">
-                    <ul class="h-reception-ul">
+                <div class="h-reception-info  ms-3 p-2 border border-2 rounded-2 flex-grow-1 ">
+                    <ul class="h-reception-ul ">
                         <li class="phone"> <h6 class="d-inline">номер телефона клиента:</h6> <div class="text d-inline">+79991382501</div></li>
                         <li class="creature"> <h6 class="d-inline">животное:</h6> <div class="text d-inline">собака</div></li>
                         <li class="gender"><h6 class="d-inline">пол:</h6> <div class="text d-inline">женский</div></li>
                         <li class="purpose"><h6 class="d-inline">цель визита:</h6> <div class="text d-inline">консультация</div></li>
                     </ul>
+                </div>
+                <div class=" btn-h-about bg-secondary bg-gradient align-self-stretch">
+                    <div class="label-about vertical-text">Подробнее</div>
                 </div>
             </div>
         </div>
@@ -45,13 +52,16 @@
         <div class="h-reception shadow p-3 rounded-3 m-3">
             <div class="h-reception-container d-flex align-items-center">
                 <div class="h-reception-img"></div>
-                <div class="h-reception-info  ms-3 p-2 border border-2 rounded-2 flex-grow-1">
-                    <ul class="h-reception-ul">
+                <div class="h-reception-info  ms-3 p-2 border border-2 rounded-2 flex-grow-1 ">
+                    <ul class="h-reception-ul ">
                         <li class="phone"> <h6 class="d-inline">номер телефона клиента:</h6> <div class="text d-inline">+79991382501</div></li>
                         <li class="creature"> <h6 class="d-inline">животное:</h6> <div class="text d-inline">собака</div></li>
                         <li class="gender"><h6 class="d-inline">пол:</h6> <div class="text d-inline">женский</div></li>
                         <li class="purpose"><h6 class="d-inline">цель визита:</h6> <div class="text d-inline">консультация</div></li>
                     </ul>
+                </div>
+                <div class=" btn-h-about bg-secondary bg-gradient align-self-stretch">
+                    <div class="label-about vertical-text">Подробнее</div>
                 </div>
             </div>
         </div>
@@ -59,19 +69,27 @@
         <div class="h-reception shadow p-3 rounded-3 m-3">
             <div class="h-reception-container d-flex align-items-center">
                 <div class="h-reception-img"></div>
-                <div class="h-reception-info  ms-3 p-2 border border-2 rounded-2 flex-grow-1">
-                    <ul class="h-reception-ul">
+                <div class="h-reception-info  ms-3 p-2 border border-2 rounded-2 flex-grow-1 ">
+                    <ul class="h-reception-ul ">
                         <li class="phone"> <h6 class="d-inline">номер телефона клиента:</h6> <div class="text d-inline">+79991382501</div></li>
                         <li class="creature"> <h6 class="d-inline">животное:</h6> <div class="text d-inline">собака</div></li>
                         <li class="gender"><h6 class="d-inline">пол:</h6> <div class="text d-inline">женский</div></li>
                         <li class="purpose"><h6 class="d-inline">цель визита:</h6> <div class="text d-inline">консультация</div></li>
                     </ul>
                 </div>
+                <div class=" btn-h-about bg-secondary bg-gradient align-self-stretch">
+                    <div class="label-about vertical-text">Подробнее</div>
+                </div>
             </div>
         </div>
-
+        
     </div>
-    
+
+</div>
+
+<div class="btn-plus-reception shadow-sm bg-secondary bg-gradient">
+    <img src="../static/icons/plus.svg"  class="img-plus-reception">
+    <div class="label-plus-reception">Добавить приём</div>
 </div>
 
 {%endblock%}
