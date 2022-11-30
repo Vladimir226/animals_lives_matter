@@ -1,3 +1,8 @@
+
+a{
+    text-decoration: none;
+    color: white;
+}
 .profile-img
 {
     width: 200px;
@@ -5,7 +10,7 @@
 
     min-width: 200px;
 
-    background-color: thistle;
+    background-color: rgb(102, 124, 213);
 
 }
 ul{
@@ -29,7 +34,7 @@ ul{
     width: 130px;
     height: 130px; 
 
-    background-color: thistle;
+    background-color: rgb(102, 124, 213);
 } 
 .btn-plus-reception
 {
@@ -82,3 +87,13 @@ ul{
      margin-top: 20px;
      margin-bottom: 20px;
  } */
+
+ .admission-container
+ {
+     max-width: 900px;
+     margin: 0 auto;
+ }
+ .new-zoo-container
+ {
+     display: none;
+ }

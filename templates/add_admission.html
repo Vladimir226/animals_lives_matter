@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{%block title%} 
+add_admission
+{%endblock%}
+
+{%block body%}
+<div class="admission-container mt-5">
+    <h3 class="admission-title text-center">Новый прием</h3>
+    <form>
+
+        <div class="id-admssion">
+            <h4 class="d-inline">прием №</h4>
+            <h4 class="d-inline" id="id-admission">455</h4>
+        </div>
+
+        <div class="date-admission">
+            <h4 class="d-inline">дата приёма:</h4>
+            <h4 class="d-inline" id="date-admission">17.11.2022</h4>
+        </div>
+
+        <div class="time-admission">
+            <h4 class="d-inline">время приёма:</h4>
+            <h4 class="d-inline" id="time-admission">17:37</h4>
+        </div>
+
+        <h4 class="my-4">Информация о хозяине:</h4>
+        <div class="from-group">
+            <div class="row">
+                <div class="col-8">
+                    <label for="fullname-person">ФИО</label>
+                    <input type="text" class="form-control" id="fullname-person" aria-describedby="fullname-person" placeholder="введите ФИО хозяина">
+                    <small id="fullname-person" class="form-text text-muted">Например: Афанасьев Афанасий Афанасьевич</small>
+                </div>
+                <div class="col-4">
+                    <label for="phone-person">номер телефона</label>
+                    <input type="text" class="form-control" id="phone-person" aria-describedby="phone-person" placeholder="введите номер телефона">
+                    <small id="phone-person" class="form-text text-muted">Например: +79999999999</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-check form-switch my-2">
+            <input class="form-check-input" type="checkbox" id="new-zoo-check">
+            <label class="form-check-label" for="new-zoo-check">Вы привели своего питомца в первый раз</label>
+        </div>
+
+        <div class="choose-zoo-container">
+            <div class="row">
+                <div class="col-4">
+                    <label for="select-zoo">Выберете животное:</label>
+                    <select class="form-control" id="select-zoo">
+                        <option>не выбрано</option>
+                        <option>собака Тузик</option>
+                        <option>кошка Барсик</option>
+                        <option>кошка Кадык</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="new-zoo-container">
+
+            <h4 class="my-4">Информация о животном:</h4>
+
+            <div class="form-group">
+                <div class="row mb-2">
+                    <div class="col-8">
+                        <label for="type-zoo">Вид животного</label>
+                        <input type="text" class="form-control" id="type-zoo" aria-describedby="type-zoo" placeholder="введите вид животного">
+                        <small id="type-zoo" class="form-text text-muted">Например: кошка</small>
+                    </div>
+                    <div class="col-4">
+                        <label for="type-zoo">Пол животного</label>
+                        <select class="form-control">
+                            <option>не выбрано</option>
+                            <option>сука</option>
+                            <option>кобель</option>
+                        </select>
+                    </div>
+                </div>
+    
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <label for="age-zoo">возраст</label>
+                        <input type="number" class="form-control" id="age-zoo" aria-describedby="age-zoo" placeholder="введите возраст животного">
+                        <small id="age-zoo" class="form-text text-muted">Например: 3 (количество лет)</small>
+                    </div>
+                    <div class="col-6">
+                        <label for="species-zoo">порода</label>
+                        <input type="text" class="form-control" id="species-zoo" aria-describedby="species-zoo" placeholder="введите породу животного">
+                        <small id="species-zoo" class="form-text text-muted">Например: корги</small>
+                    </div>
+                </div>
+    
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <label for="name-zoo">кличка</label>
+                        <input type="number" class="form-control" id="name-zoo" aria-describedby="name-zoo" placeholder="введите кличку животного">
+                        <small id="name-zoo" class="form-text text-muted">Например: Тузик</small>
+                    </div>
+                    <div class="col-6">
+                        <label for="color-zoo">окрас</label>
+                        <input type="text" class="form-control" id="color-zoo" aria-describedby="color-zoo" placeholder="введите окрас животного">
+                        <small id="color-zoo" class="form-text text-muted">Например: серый</small>
+                    </div>
+                </div>
+             
+            </div>
+    
+          </form>
+
+        </div>
+
+        <div class="info-admission-container mb-5">
+            <h4 class="my-4">Приём</h4>
+            <form>
+                <div class="form-group mb-2">
+                  <label for="diagnostic-textarea">диагностичесчкие исследования</label>
+                  <textarea class="form-control" id="diagnostic-textarea" rows="3" placeholder=""></textarea>
+                </div>
+                <div class="form-group mb-2">
+                    <label for="description-textarea">описание</label>
+                    <textarea class="form-control" id="description-textare" rows="3" placeholder=""></textarea>
+                </div>
+                <div class="form-group mb-2">
+                    <label for="diagnosis-textarea">диагноз</label>
+                    <textarea class="form-control" id="diagnosis-textare" rows="1" placeholder=""></textarea>
+                </div>
+                <div class="form-group mb-5">
+                    <label for="recommendations-textarea">рекомендации</label>
+                    <textarea class="form-control" id="recommendations-textare" rows="3" placeholder=""></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary ">Сохранить приём</button>
+            </form>
+        </div>
+       
+</div>
+{%endblock%}
