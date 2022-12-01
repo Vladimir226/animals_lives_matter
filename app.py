@@ -19,5 +19,9 @@ def add_admission():
 def admission():
     return render_template("admission.html")
 
+@app.route('/edit_profile')
+def edit_profile():
+    return render_template('edit_profile.html')
+
 if __name__ =="__main__":
     app.run(debug=True)
