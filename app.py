@@ -80,7 +80,11 @@ def alm_library():
 def alm_animals():
     return render_template('alm_animals.html')
 
-@app.route('/animals/admisson')
+@app.route('/animals/admissions')
+def admissions():
+    return render_template('admissions.html')
+
+@app.route('/animals/admissions/admisson')
 def alm_admission():
     return render_template("admission.html")
 
