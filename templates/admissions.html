@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{%block title%} 
+admissions
+{%endblock%}
+
+{%block body%}
+<div class="list-receptions mt-5">
+    <h3 class="list-title text-center">Приемы</h3>
+    <div class="d-flex flex-column">
+        <a href="{{url_for('alm_admission')}}" class="library-a text-decoration-none text-reset">
+            <div class="h-reception shadow p-3 rounded-3 m-3 ">
+                <div class="h-reception-container d-flex align-items-center">
+                    <div class="h-reception-img rounded-2"></div>
+                    <div class="h-reception-info   p-2 border border-2 rounded-2 flex-grow-1  ms-2">
+                        <ul class="h-reception-ul ">
+                            <li class="number-admission"> <h6 class="d-inline">Номер приёма:</h6> <div class="text d-inline">432</div></li>
+                            <li class="date-admission"> <h6 class="d-inline">Дата приема:</h6> <div class="text d-inline">17.12.2022</div></li>
+                            <li class="doctor-admission"> <h6 class="d-inline">Ветврач:</h6> <div class="text d-inline">Антонов Илья Петрович</div></li>
+                            <li class="diagnosis-admission"> <h6 class="d-inline">Диагноз:</h6> <div class="text d-inline">умственная передостаточность</div></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </a>
+    
+    </div>
+
+</div>
+{%endblock%}
