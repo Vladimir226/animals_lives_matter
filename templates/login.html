@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{%block title%}
+login
+{%endblock%}
+
+{%block body%}
+    <form action="/login" method="POST">
+        <p><label for="">Логин:</label></p><input type="text" name='login' requied/>
+        <p><label for="">Пароль:</label></p><input type="text" name='password' requied/>
+        <p><input type="submit" value="Отправить"/></p>
+    </form>
+{%endblock%}

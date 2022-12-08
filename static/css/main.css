@@ -97,3 +97,16 @@ ul{
  {
      display: none;
  }
+ a.main_title
+ a.main_title:hover
+ {
+    text-decoration: none;
+ }
+
+ .library-a:hover
+ {
+    
+     
+    transform:scale(1.01);
+
+ }

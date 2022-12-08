@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{%block title%} 
+library animals
+{%endblock%}
+
+{%block body%}
+<div class="list-receptions mt-5">
+    <h3 class="list-title text-center">Животные</h3>
+    <div class="d-flex flex-column">
+        <a href="{{url_for('alm_admission')}}" class="library-a text-decoration-none text-reset">
+            <div class="h-reception shadow p-3 rounded-3 m-3 ">
+                <div class="h-reception-container d-flex align-items-center">
+                    <div class="h-reception-img rounded-2"></div>
+                    <div class="h-reception-info   p-2 border border-2 rounded-2 flex-grow-1  ms-2">
+                        <ul class="h-reception-ul ">
+                            <li class="type-zoo"> <h6 class="d-inline">Вид животного:</h6> <div class="text d-inline">енот</div></li>
+                            <li class="age-zoo"> <h6 class="d-inline">Возраст:</h6> <div class="text d-inline">3</div></li>
+                            <li class="gender-zoo"> <h6 class="d-inline">Пол:</h6> <div class="text d-inline">мужской</div></li>
+                            <li class="name-zoo"> <h6 class="d-inline">Кличка:</h6> <div class="text d-inline">Белорус</div></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </a>
+    
+    </div>
+
+</div>
+{%endblock%}
