@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{%block title%} 
+library
+{%endblock%}
+
+{%block body%}
+
+<div class="list-receptions mt-5">
+    <h3 class="list-title text-center">Клиенты</h3>
+    <div class="d-flex flex-column">
+        <a href="{{url_for('alm_animals')}}" class="library-a text-decoration-none text-reset">
+            <div class="h-reception shadow p-3 rounded-3 m-3 ">
+                <div class="h-reception-container d-flex align-items-center">
+                    <div class="h-reception-info   p-2 border border-2 rounded-2 flex-grow-1 ">
+                        <ul class="h-reception-ul ">
+                            <li class="full-name"> <h6 class="d-inline">ФИО:</h6> <div class="text d-inline">Мартыненко Владимир Александрович</div></li>
+                            <li class="phone"> <h6 class="d-inline">номер телефона клиента:</h6> <div class="text d-inline">+79991382501</div></li>
+                            <li class="receptions_number"> <h6 class="d-inline">Количество посещений:</h6> <div class="text d-inline">43</div></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </a>
+    
+    </div>
+
+</div>
+
+{%endblock%}
