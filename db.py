@@ -76,12 +76,12 @@ class ALM:
             );
 
             CREATE TABLE IF NOT EXISTS doctor(
-            id serial PRIMARY KEY,
+            phone_number numeric(10) PRIMARY KEY,
+            id serial NOT NULL UNIQUE,
             surname text NOT NULL,
             name text NOT NULL,
             patronymic text,
             qualification text NOT NULL,
-            phone_number numeric(10) NOT NULL,
             receptions_number integer DEFAULT 0 CHECK(receptions_number>=0),
             password text NOT NULL,
             photo bytea DEFAULT NULL
@@ -126,7 +126,7 @@ class ALM:
             
             UPDATE doctor SET receptions_number = receptions_number + 1
             WHERE doctor.id = NEW.doctor_id;
-        
+            
             RETURN NEW;	
         END;
         $$
@@ -142,31 +142,177 @@ class ALM:
 
     def set_insert_functions(self):
         query_create = """
-        CREATE OR REPLACE PROCEDURE insert_client(
+        CREATE OR REPLACE FUNCTION insert_client(
         new_phone_number numeric(10),
         new_surname text,
         new_name text,
         new_patronymic text)
-        AS $$
-        INSERT INTO client (phone_number, surname, name, patronymic)
-        VALUES (new_phone_number, new_surname, new_name, new_patronymic);
-        $$ LANGUAGE sql;
+        RETURNS text AS
+        $func$
+        BEGIN
+        IF EXISTS (SELECT 1 FROM client WHERE phone_number = new_phone_number) THEN
+           RETURN 'User already exists';
+        ELSE
+           INSERT INTO client (phone_number, surname, name, patronymic)
+           VALUES (new_phone_number, new_surname, new_name, new_patronymic);
+           RETURN 'Successfully';
+        END IF;
+        END
+        $func$ LANGUAGE plpgsql;
         """
         self.cursor.execute(query_create)
+
+        query_create = """
+        CREATE OR REPLACE FUNCTION insert_animal(
+        new_owner_phone_number numeric(10),
+        new_nickname text,
+        new_gender varchar(6),
+        new_age numeric(2),
+        new_type text,
+        new_breed text,
+        new_color text)
+        RETURNS text AS
+        $func$
+        BEGIN
+        IF EXISTS (SELECT 1 FROM client WHERE phone_number = new_owner_phone_number) THEN
+           INSERT INTO animal
+           (owner_phone_number, nickname, gender, age, type, breed, color)
+           VALUES 
+           (new_owner_phone_number, new_nickname, new_gender, new_age, new_type, new_breed, new_color);
+           RETURN 'Successfully';
+        ELSE
+           RETURN 'Owner does not exist';
+        END IF;
+        END
+        $func$ LANGUAGE plpgsql;
+        """
+        self.cursor.execute(query_create)
+
+        query_create = """
+        CREATE OR REPLACE FUNCTION insert_doctor(
+        new_phone_number numeric(10),
+        new_surname text,
+        new_name text,
+        new_patronymic text,
+        new_qualification text,
+        new_password text)
+        RETURNS text AS
+        $func$
+        BEGIN
+        IF EXISTS (SELECT 1 FROM doctor WHERE phone_number = new_phone_number) THEN
+            RETURN 'Doctor already exists';
+        ELSE
+            INSERT INTO doctor (phone_number, surname, name, patronymic, qualification, password)
+            VALUES (new_phone_number, new_surname, new_name, new_patronymic, new_qualification,
+            new_password);
+            RETURN 'Successfully';
+        END IF;
+        END
+        $func$ LANGUAGE plpgsql;
+        """
+        self.cursor.execute(query_create)
+
+        query_create = """
+        CREATE OR REPLACE FUNCTION insert_reception(
+        new_animal_id integer,
+        new_doctor_id integer,
+        new_date date,
+        new_time time,
+        new_description text,
+        new_research text,
+        new_diagnosis text,
+        new_recommendations text)
+        RETURNS text AS
+        $func$
+        BEGIN
+        IF EXISTS (SELECT 1 FROM doctor WHERE doctor.id = new_doctor_id) THEN
+            IF EXISTS (SELECT 1 FROM animal WHERE animal.id = new_animal_id) THEN
+                INSERT INTO reception (animal_id, doctor_id, date, time, 
+                description, research, diagnosis, recommendations)
+                VALUES (new_animal_id, new_doctor_id, new_date, new_time, new_description, 
+                new_research, new_diagnosis, new_recommendations);
+                RETURN 'Successfully';
+            ELSE
+                RETURN 'Animal does not exist';
+        END IF;
+        ELSE
+            RETURN 'Doctor does not exist';
+        END IF;
+        END
+        $func$ LANGUAGE plpgsql;
+        """
+        self.cursor.execute(query_create)
+
+    def insert_end(self, result):
+        for i in result:
+            result = i
+            break
+        if result[0] == 'Successfully':
+            self.cursor.execute('COMMIT;')
+        else:
+            self.cursor.execute('ROLLBACK;')
+        return result[0]
+
+    def processing_null(self, string):
+        if string == '':
+            return 'NULL'
+        else:
+            return f"'{string}'"
 
     def insert_user(self, phone_number, surname, name, patronymic=''):
+        patronymic = self.processing_null(patronymic)
         query_create = f"""
-        call insert_client({phone_number}, '{surname}', '{name}', '{patronymic}');
+        BEGIN;
+        SELECT insert_client({phone_number}, '{surname}', '{name}', {patronymic});
         """
-        self.cursor.execute(query_create)
+        result = self.cursor.execute(query_create)
+        return self.insert_end(result)
+
+    def insert_animal(self, owner_phone_number, nickname, gender, age, type, breed='', color=''):
+        breed = self.processing_null(breed)
+        color = self.processing_null(color)
+        if gender not in ['male', 'female']:
+            return 'Incorrect gender (select male or female)'
+        query_create = f"""
+        BEGIN;
+        SELECT insert_animal({owner_phone_number}, '{nickname}', '{gender}', {age}, '{type}', {breed}, {color});
+        """
+        result = self.cursor.execute(query_create)
+        return self.insert_end(result)
+
+    def insert_doctor(self, phone_number, qualification, password, surname, name, patronymic=''):
+        patronymic = self.processing_null(patronymic)
+        query_create = f"""
+        BEGIN;
+        SELECT insert_doctor({phone_number}, '{surname}', '{name}', {patronymic}, '{qualification}', '{password}');
+        """
+        result = self.cursor.execute(query_create)
+        return self.insert_end(result)
+
+    def insert_reception(self, animal_id, doctor_id, date, time, description='', research='', diagnosis='',
+                         recommendations=''):
+        description = self.processing_null(description)
+        research = self.processing_null(research)
+        diagnosis = self.processing_null(diagnosis)
+        recommendations = self.processing_null(recommendations)
+        query_create = f"""
+        BEGIN;
+        SELECT insert_reception({animal_id}, {doctor_id}, '{date}', '{time}', 
+        {description}, {research}, {diagnosis}, {recommendations});
+        """
+        result = self.cursor.execute(query_create)
+        return self.insert_end(result)
 
 db = ALM("usr", "123456", "localhost", "5432")
-# db.insert_user('9991382503', 'Мартыненко', 'Владимир', 'Александрович')
-# db.cursor.execute('COMMIT')
-# db.insert_user('9991382502', 'Мартыненко', 'Владимир')
-# db.cursor.execute('COMMIT')
-# db.insert_user('9991382505', '', 'Владимир')
-
-
-
+print(db.insert_user(9998886600, 'Петров', 'Петр', 'Петрович'))
+print(db.insert_animal(9998886600, 'Тузик', 'male', 3, 'Собака', 'Дворняга', 'Черный'))
+print(db.insert_animal(9998886600, 'Барсик', 'male', 2, 'Кот', '', 'Рыжий'))
+print(db.insert_user(9998886601, 'Иванов', 'Иван', 'Иванович'))
+print(db.insert_animal(9998886601, 'Рекс', 'male', 1, 'Собака', 'Такса'))
+print(db.insert_doctor(8005553535, 'Терапевт', 'xxx', 'Мартыненко', 'Владимир', 'Александрович'))
+print(db.insert_doctor(8005553500, 'Терапевт', 'xxx', 'Сидоров', 'Петр', 'Аркадьевич'))
+print(db.insert_reception(2,1,'2022-12-08','20:30:00'))
+print(db.insert_reception(1,2,'2022-12-08','20:30:00'))
+print(db.insert_reception(1,2,'2022-12-08','20:30:00'))
+print(db.insert_reception(3,1,'2022-12-08','20:30:00'))
 
