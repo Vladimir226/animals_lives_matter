@@ -20,6 +20,7 @@ class ALM:
         self.create_tables()
         self.set_triggers()
         self.set_insert_functions()
+        # self.set_select_functions()
 
     def create_db(self):
         query_create = f"""
@@ -48,60 +49,60 @@ class ALM:
         query_create = """
         CREATE OR REPLACE PROCEDURE create_tables()
         AS $$ 
-            CREATE TABLE IF NOT EXISTS client(
-            phone_number numeric(10) PRIMARY KEY,
-            surname text NOT NULL,
-            name text NOT NULL,
-            patronymic text,
-            receptions_number integer
-            DEFAULT 0
-            CHECK(receptions_number>=0)
-            );
+        CREATE TABLE IF NOT EXISTS client(
+        phone_number numeric(10) PRIMARY KEY,
+        surname text NOT NULL,
+        name text NOT NULL,
+        patronymic text,
+        receptions_number integer
+        DEFAULT 0
+        CHECK(receptions_number>=0)
+        );
 
-            CREATE TABLE IF NOT EXISTS animal(
-            id serial PRIMARY KEY,
-            owner_phone_number numeric(10) REFERENCES client(phone_number)
-            ON UPDATE CASCADE 
-            ON DELETE CASCADE,
-            nickname text NOT NULL,
-            gender varchar(6) NOT NULL CHECK (gender IN ('male', 'female')),
-            age numeric(2) NOT NULL CHECK (age>=0 OR age<=30),
-            type text NOT NULL,
-            breed text,
-            color text,
-            photo bytea DEFAULT NULL,
-            receptions_number integer
-            DEFAULT 0
-            CHECK(receptions_number>=0)
-            );
+        CREATE TABLE IF NOT EXISTS animal(
+        id serial PRIMARY KEY,
+        owner_phone_number numeric(10) REFERENCES client(phone_number)
+        ON UPDATE CASCADE 
+        ON DELETE CASCADE,
+        nickname text NOT NULL,
+        gender varchar(6) NOT NULL CHECK (gender IN ('male', 'female')),
+        age numeric(2) NOT NULL CHECK (age>=0 OR age<=30),
+        type text NOT NULL,
+        breed text,
+        color text,
+        photo bytea DEFAULT NULL,
+        receptions_number integer
+        DEFAULT 0
+        CHECK(receptions_number>=0)
+        );
 
-            CREATE TABLE IF NOT EXISTS doctor(
-            phone_number numeric(10) PRIMARY KEY,
-            id serial NOT NULL UNIQUE,
-            surname text NOT NULL,
-            name text NOT NULL,
-            patronymic text,
-            qualification text NOT NULL,
-            receptions_number integer DEFAULT 0 CHECK(receptions_number>=0),
-            password text NOT NULL,
-            photo bytea DEFAULT NULL
-            );
+        CREATE TABLE IF NOT EXISTS doctor(
+        phone_number numeric(10) PRIMARY KEY,
+        id serial NOT NULL UNIQUE,
+        surname text NOT NULL,
+        name text NOT NULL,
+        patronymic text,
+        qualification text NOT NULL,
+        receptions_number integer DEFAULT 0 CHECK(receptions_number>=0),
+        password text NOT NULL,
+        photo bytea DEFAULT NULL
+        );
 
-            CREATE TABLE IF NOT EXISTS reception(
-            id serial PRIMARY KEY,
-            animal_id integer REFERENCES animal(id)
-            ON UPDATE CASCADE
-            ON DELETE CASCADE,
-            doctor_id integer REFERENCES doctor(id)
-            ON UPDATE CASCADE
-            ON DELETE CASCADE,
-            date date NOT NULL,
-            time time NOT NULL,
-            description text,
-            research text,
-            diagnosis text,
-            recommendations text
-            );
+        CREATE TABLE IF NOT EXISTS reception(
+        id serial PRIMARY KEY,
+        animal_id integer REFERENCES animal(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+        doctor_id integer REFERENCES doctor(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+        date date NOT NULL,
+        time time NOT NULL,
+        description text,
+        research text,
+        diagnosis text,
+        recommendations text
+        );
         $$ LANGUAGE SQL;
         """
         self.cursor.execute(query_create)
@@ -303,16 +304,74 @@ class ALM:
         result = self.cursor.execute(query_create)
         return self.insert_end(result)
 
-db = ALM("usr", "123456", "localhost", "5432")
-print(db.insert_user(9998886600, 'Петров', 'Петр', 'Петрович'))
-print(db.insert_animal(9998886600, 'Тузик', 'male', 3, 'Собака', 'Дворняга', 'Черный'))
-print(db.insert_animal(9998886600, 'Барсик', 'male', 2, 'Кот', '', 'Рыжий'))
-print(db.insert_user(9998886601, 'Иванов', 'Иван', 'Иванович'))
-print(db.insert_animal(9998886601, 'Рекс', 'male', 1, 'Собака', 'Такса'))
-print(db.insert_doctor(8005553535, 'Терапевт', 'xxx', 'Мартыненко', 'Владимир', 'Александрович'))
-print(db.insert_doctor(8005553500, 'Терапевт', 'xxx', 'Сидоров', 'Петр', 'Аркадьевич'))
-print(db.insert_reception(2,1,'2022-12-08','20:30:00'))
-print(db.insert_reception(1,2,'2022-12-08','20:30:00'))
-print(db.insert_reception(1,2,'2022-12-08','20:30:00'))
-print(db.insert_reception(3,1,'2022-12-08','20:30:00'))
+    # ПЕРЕДЕЛАТЬ ЧЕРЕЗ ПРОЦЕДУРЫ
+    def get_all_clients(self):
+        query_create = """
+        SELECT * FROM client;
+        """
+        result = self.cursor.execute(query_create)
+        clients = []
+        for i in result:
+            clients.append(dict(i))
+        return clients
 
+    # ПЕРЕДЕЛАТЬ ЧЕРЕЗ ПРОЦЕДУРЫ
+    def get_animals(self, phone_number):
+        query_create = f"""
+        SELECT * FROM animal WHERE owner_phone_number = {phone_number};
+        """
+        result = self.cursor.execute(query_create)
+        animals = []
+        for i in result:
+            animals.append(dict(i))
+        return animals
+
+    # ПЕРЕДЕЛАТЬ ЧЕРЕЗ ПРОЦЕДУРЫ
+    def get_animal_receptions(self, id):
+        query_create = f"""
+        SELECT * FROM reception WHERE animal_id={id};
+        """
+        result = self.cursor.execute(query_create)
+        receptions = []
+        for i in result:
+            receptions.append(dict(i))
+        return receptions
+
+    # ПЕРЕДЕЛАТЬ ЧЕРЕЗ ПРОЦЕДУРЫ
+    def get_reception(self, id):
+        query_create = f"""
+        SELECT * FROM client JOIN animal on client.phone_number=animal.owner_phone_number JOIN reception on
+        animal.id = reception.animal_id JOIN doctor on reception.doctor_id = doctor.id WHERE reception.id = {id};
+        """
+        result = self.cursor.execute(query_create)
+        receptions = {}
+        for i in result:
+            receptions['client'] = dict(
+                zip(['phone_number', 'surname', 'name', 'patronymic', 'receptions_number'], i[:6]))
+            receptions['animal'] = dict(
+                zip(['owner_phone_number', 'nickname', 'gender', 'age', 'type', 'breed', 'color', 'photo', 'receptions_number'], i[6:15]))
+            receptions['reception'] = dict(zip(['id', 'animal_id', 'doctor_id', 'date', 'time',
+                                                'description', 'research', 'diagnosis', 'recommendations'], i[15:24]))
+            receptions['doctor'] = dict(
+                zip(['phone_number', 'id', 'surname', 'name', 'patronymic', 'qualification', 'receptions_number', 'password', 'photo'], i[24:]))
+            print(i[:5], i[5:15])
+
+        return receptions
+
+
+db = ALM("usr", "123456", "localhost", "5432")
+# print(db.insert_user(9998886600, 'Петров', 'Петр', 'Петрович'))
+# print(db.insert_user(9998886601, 'Иванов', 'Петр', 'Петрович'))
+# print(db.insert_animal(9998886600, 'Тузик', 'male', 3, 'Собака', 'Дворняга', 'Черный'))
+# print(db.insert_animal(9998886600, 'Барсик', 'male', 2, 'Кот', '', 'Рыжий'))
+# print(db.insert_animal(9998886601, 'Рекс', 'male', 1, 'Собака', 'Такса'))
+# print(db.insert_doctor(8005553535, 'Терапевт', 'xxx', 'Мартыненко', 'Владимир', 'Александрович'))
+# print(db.insert_doctor(8005553500, 'Терапевт', 'xxx', 'Сидоров', 'Петр', 'Аркадьевич'))
+# print(db.insert_reception(2,1,'2022-12-08','20:30:00'))
+# print(db.insert_reception(1,2,'2022-12-08','20:30:00'))
+# print(db.insert_reception(1,2,'2022-12-08','20:30:00'))
+# print(db.insert_reception(3,1,'2022-12-08','20:30:00'))
+# print(db.get_all_clients())
+# print(db.get_animals(9998886600))
+# print(db.get_animal_receptions(1))
+print(db.get_reception(4))
