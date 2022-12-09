@@ -30,7 +30,7 @@ app.config.update(dict(DATABASE=os.path.join(app.root_path,'app.db')))
 #         g.link_db = connect_db()
 #     return g.link_db
 
-db = ALM("postgres", "123456", "localhost", "5432")
+database = ALM("postgres", "123456", "localhost", "5432")
 
 @app.teardown_appcontext
 def closw_db(error):
@@ -51,7 +51,7 @@ doctors.append(doctor_0)
 
 @app.route('/profile', methods=['GET','POST'])
 def profile():
-    db= get_db()
+    # db= get_db()
     return render_template("profile.html",doctor = doctors[0])
 
 @app.route('/admissions_history')
@@ -61,7 +61,7 @@ def admissions_history():
 @app.route('/add_admission')
 def add_admission():
     return render_template('add_admission.html')
-
+import db
 
 @app.route('/edit_profile')
 def edit_profile():
@@ -73,19 +73,19 @@ def login():
 
 @app.route('/')
 def alm_library():
-    return render_template('alm_library.html', persons = db.get_all_clients())
+    return render_template('alm_library.html', persons = database.get_all_clients())
 
 @app.route('/animals/<int:phone_number>')
 def alm_animals(phone_number):
-    return render_template('alm_animals.html', animals = db.get_animals(phone_number))
+    return render_template('alm_animals.html', animals = database.get_animals(phone_number))
 
 @app.route('/admissions/<int:animal_id>')
 def admissions(animal_id):
-    return render_template('admissions.html', receptions = db.get_animal_receptions(animal_id))
+    return render_template('admissions.html', receptions = database.get_animal_receptions(animal_id))
 
 @app.route('/admission/<int:reception_id>')
 def admission(reception_id):
-    return render_template("admission.html", info = db.get_reception(reception_id))
+    return render_template("admission.html", info = database.get_reception(reception_id))
 
 
 if __name__ =="__main__":

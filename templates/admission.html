@@ -8,63 +8,64 @@
 <div class="admission my-5">
 
     <div class="id-admssion text-center">
-        <h3 class="d-inline">прием №</h3>
+        <h3 class="d-inline">Прием №</h3>
         <h3 class="d-inline" id="id-admission">{{info.reception.id}}</h3>
     </div>
     
     <div class="date-admission">
-        <h5 class="d-inline">дата приёма:</h5>
-        <h5 class="d-inline" id="date-admission">17.11.2022</h5>
+        <h5 class="d-inline">Дата приёма:</h5>
+        <h5 class="d-inline" id="date-admission">{{ info.reception.date }}</h5>
     </div>
     
     <div class="time-admission">
-        <h5 class="d-inline">время приёма:</h5>
-        <h5 class="d-inline" id="time-admission">17:37</h5>
+        <h5 class="d-inline">Время приёма:</h5>
+        <h5 class="d-inline" id="time-admission">{{ info.reception.time }}</h5>
     </div>
     
     <div class="doctor-admssion mb-5">
-        <h5 class="d-inline">Ветврач:</h5>
-        <h5 class="d-inline" id="doctor-admission">Мартыненко Владимир Александрович</h5>
+        <h5 class="d-inline">Ветеринарный врач:</h5>
+        <h5 class="d-inline" id="doctor-admission">{{ info.doctor.surname }}
+        {{ info.doctor.name }} {{ info.doctor.patronymic }}</h5>
     </div>
 
     <h4 class="my-4">Информация о хозяине</h4>
 
     <div class="client-fullname-admssion">
         <h5 class="d-inline">ФИО:</h5>
-        <h5 class="d-inline" id="client-fullname-admission">Мартыненко Владимир Александрович</h5>
+        <h5 class="d-inline" id="client-fullname-admission">{{ info.client.surname }} {{ info.client.name }} {{ info.client.patronymic }}</h5>
     </div>
 
     <div class="client-phone-admssion">
         <h5 class="d-inline">Номер телефона: </h5>
-        <h5 class="d-inline" id="client-phone-admission">+79991382501</h5>
+        <h5 class="d-inline" id="client-phone-admission">+7{{ info.client.phone_number }}</h5>
     </div>
 
     <h4 class="my-4">Информация о животном</h4>
 
     <div class="type-zoo-admission">
         <h5 class="d-inline">Вид: </h5>
-        <h5 class="d-inline" id="type-zoo-admission">суслик</h5>
+        <h5 class="d-inline" id="type-zoo-admission">{{ info.animal.type }}</h5>
     </div>
 
     <div class="species-zoo-admission">
         <h5 class="d-inline">Порода: </h5>
-        <h5 class="d-inline" id="species-zoo-admission">африканский</h5>
+        <h5 class="d-inline" id="species-zoo-admission">{{info.animal.breed}}</h5>
     </div>
 
     <div class="name-zoo-admission">
-        <h5 class="d-inline">Кличка: </5>
-        <h5 class="d-inline" id="name-zoo-admission">суслик</h5>
+        <h5 class="d-inline">Кличка: </h5>
+        <h5 class="d-inline" id="name-zoo-admission">{{info.animal.nickname}}</h5>
     </div>
 
    
     <div class="age-zoo-admission">
         <h5 class="d-inline">Возраст: </h5>
-        <h5 class="d-inline" id="age-zoo-admission">5</h5>
+        <h5 class="d-inline" id="age-zoo-admission">{{ info.animal.age }}</h5>
     </div>
 
     <div class="color-zoo-admission">
         <h5 class="d-inline">Окрас: </h5>
-        <h5 class="d-inline" id="color-zoo-admission">пятнистый</h5>
+        <h5 class="d-inline" id="color-zoo-admission">{{info.animal.color}}</h5>
     </div>
 
     <h4 class="my-4">Информация о приёме</h4>
@@ -72,38 +73,28 @@
     <div class="diagnostic-admission mb-3">
         <h5 class="">Диагностичесчкие исследования: </h5>
         <h5 class="" id="diagnostic-admission">
-            consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident,
-            sunt in culpa qui officia deserunt mollit anim id est laborum
+            {{ info.reception.research }}
         </h5>
     </div>
 
     <div class="description-admission mb-3">
         <h5 class="">Описание: </h5>
         <h5 class="" id="description-admission">
-            consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident,
-            sunt in culpa qui officia deserunt mollit anim id est laborum
+            {{ info.reception.description }}
         </h5>
     </div>
 
     <div class="diagnosis-admission mb-3">
         <h5 class="">Диагноз: </h5>
         <h5 class="" id="diagnosis-admission">
-            consectetur adipiscing elit
+            {{ info.reception.diagnosis }}
         </h5>
     </div>
 
     <div class="recommendations-admission mb-3">
         <h5 class="">Рекомендации: </h5>
         <h5 class="" id="recommendations-admission">
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident,
-            sunt in culpa qui officia deserunt mollit anim id est laborum
+            {{ info.reception.recommendations }}
         </h5>
     </div>
     

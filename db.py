@@ -372,6 +372,6 @@ class ALM:
 # print(db.insert_reception(1,2,'2022-12-08','20:30:00'))
 # print(db.insert_reception(3,1,'2022-12-08','20:30:00'))
 # print(db.get_all_clients())
-# print(db.get_animals(9998886600))
-# print(db.get_animal_receptions(1))
+#print(db.get_animals(9998886600))
+#print(db.get_animal_receptions(2))
 # print(db.get_reception(4))
