@@ -358,6 +358,15 @@ class ALM:
 
         return receptions
 
+    def get_doctor(self, phone_number):
+        query_create = f"""
+        SELECT * FROM doctor WHERE doctor.phone_number={phone_number};
+        """
+        result = self.cursor.execute(query_create)
+        receptions = {}
+        for i in result:
+            receptions = dict(i)
+        return receptions
 
 # db = ALM("postgres", "123456", "localhost", "5432")
 # print(db.insert_user(9998886600, 'Петров', 'Петр', 'Петрович'))

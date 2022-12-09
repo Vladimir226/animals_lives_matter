@@ -1,8 +1,12 @@
-from flask import Flask, render_template, request, g
-from flask_login import LoginManager 
+from flask import Flask, render_template, request, g, redirect, url_for, flash
+from flask_login import LoginManager, login_user
 import os
 import sqlite3
+
+from werkzeug.security import check_password_hash
+
 from db import *
+from UserLogin import UserLogin
 
 #configurate
 DATABASE = '/tmp/app.db'
@@ -20,6 +24,12 @@ app.config.update(dict(DATABASE=os.path.join(app.root_path,'app.db')))
 
 
 database = ALM("postgres", "123456", "localhost", "5432")
+
+login_manager = LoginManager(app)
+@login_manager.user_loader
+def load_user(user_phone):
+    print("loader user")
+    return UserLogin().fromDB(user_phone, database)
 
 @app.teardown_appcontext
 def closw_db(error):
@@ -56,9 +66,18 @@ import db
 def edit_profile():
     return render_template('edit_profile.html')
 
-@app.route('/login')
+@app.route('/login', methods=['POST', 'GET'])
 def login():
-    return render_template('login.html')
+    if request.method == 'POST':
+        user = database.get_doctor(request.form['login'])
+        if user and check_password_hash(user['password'], request.form['password']):
+            userlogin = UserLogin().create(user)
+            login_user(userlogin)
+            return redirect(url_for('profile'))
+
+    flash('Неверная пара логин/пароль', 'error')
+
+    return render_template('login.html', title='Авторизация')
 
 @app.route('/')
 def alm_library():
