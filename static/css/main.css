@@ -105,3 +105,12 @@ ul{
     transform:scale(1.01);
 
  }
+.container_login
+{
+    max-width: 300px;
+    margin: auto 0;
+}
+ .label_login
+ {
+     text-align: center;
+ }

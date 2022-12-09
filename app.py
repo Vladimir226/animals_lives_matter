@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, g 
+from flask import Flask, render_template, request, g
+from flask_login import LoginManager 
 import os
 import sqlite3
 from db import *
@@ -13,22 +14,10 @@ app.config.from_object(__name__)
 
 app.config.update(dict(DATABASE=os.path.join(app.root_path,'app.db')))
 
-# def connect_db():
-#     conn = sqlite3.connect(app.config['DATABASE'])
-#     conn.row_factory = sqlite3.Row
-#     return conn
+# login_manager = LoginManager(app)
 
-# def create_db():
-#     db = connect_db()
-#     with app.open_resource('sq_db.sql', mode='r') as f:
-#         db.cursor().executescript(f.read())
-#     db.commit()
-#     db.close()
 
-# def get_db():
-#     if not hasattr(g,'link_db'):
-#         g.link_db = connect_db()
-#     return g.link_db
+
 
 database = ALM("postgres", "123456", "localhost", "5432")
 

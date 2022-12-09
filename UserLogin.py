@@ -1,0 +1,2 @@
+class UserLogin():
+    def fromDB()
