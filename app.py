@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, g 
 import os
 import sqlite3
-
+from db import *
 
 #configurate
 DATABASE = '/tmp/app.db'
@@ -13,22 +13,24 @@ app.config.from_object(__name__)
 
 app.config.update(dict(DATABASE=os.path.join(app.root_path,'app.db')))
 
-def connect_db():
-    conn = sqlite3.connect(app.config['DATABASE'])
-    conn.row_factory = sqlite3.Row
-    return conn
+# def connect_db():
+#     conn = sqlite3.connect(app.config['DATABASE'])
+#     conn.row_factory = sqlite3.Row
+#     return conn
 
-def create_db():
-    db = connect_db()
-    with app.open_resource('sq_db.sql', mode='r') as f:
-        db.cursor().executescript(f.read())
-    db.commit()
-    db.close()
+# def create_db():
+#     db = connect_db()
+#     with app.open_resource('sq_db.sql', mode='r') as f:
+#         db.cursor().executescript(f.read())
+#     db.commit()
+#     db.close()
 
-def get_db():
-    if not hasattr(g,'link_db'):
-        g.link_db = connect_db()
-    return g.link_db
+# def get_db():
+#     if not hasattr(g,'link_db'):
+#         g.link_db = connect_db()
+#     return g.link_db
+
+db = ALM("postgres", "123456", "localhost", "5432")
 
 @app.teardown_appcontext
 def closw_db(error):
@@ -60,9 +62,6 @@ def admissions_history():
 def add_admission():
     return render_template('add_admission.html')
 
-@app.route('/admission')
-def admission():
-    return render_template("admission.html")
 
 @app.route('/edit_profile')
 def edit_profile():
@@ -74,19 +73,20 @@ def login():
 
 @app.route('/')
 def alm_library():
-    return render_template('alm_library.html')
+    return render_template('alm_library.html', persons = db.get_all_clients())
 
-@app.route('/animals')
-def alm_animals():
-    return render_template('alm_animals.html')
+@app.route('/animals/<int:phone_number>')
+def alm_animals(phone_number):
+    return render_template('alm_animals.html', animals = db.get_animals(phone_number))
 
-@app.route('/animals/admissions')
-def admissions():
-    return render_template('admissions.html')
+@app.route('/admissions/<int:animal_id>')
+def admissions(animal_id):
+    return render_template('admissions.html', receptions = db.get_animal_receptions(animal_id))
 
-@app.route('/animals/admissions/admisson')
-def alm_admission():
-    return render_template("admission.html")
+@app.route('/admission/<int:reception_id>')
+def admission(reception_id):
+    return render_template("admission.html", info = db.get_reception(reception_id))
+
 
 if __name__ =="__main__":
     app.run(debug=True)
