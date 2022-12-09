@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, g, redirect, url_for, flash
-from flask_login import LoginManager, login_user
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import os
 import sqlite3
 
@@ -26,6 +26,9 @@ app.config.update(dict(DATABASE=os.path.join(app.root_path,'app.db')))
 database = ALM("postgres", "123456", "localhost", "5432")
 
 login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+# login_manager.login_message = 'Авторизуйтесь для доступа к закрытым сессия'
+# login_manager.login_message_category = 'success'
 @login_manager.user_loader
 def load_user(user_phone):
     print("loader user")
@@ -49,25 +52,32 @@ doctor_0 = {
 doctors.append(doctor_0)
 
 @app.route('/profile', methods=['GET','POST'])
+@login_required
 def profile():
     # db= get_db()
-    return render_template("profile.html",doctor = doctors[0])
+    return render_template("profile.html",doctor = database.get_doctor(current_user.get_id()))
 
 @app.route('/admissions_history')
+@login_required
 def admissions_history():
     return render_template("admissions_history.html")
 
 @app.route('/add_admission')
+@login_required
 def add_admission():
     return render_template('add_admission.html')
 import db
 
 @app.route('/edit_profile')
+@login_required
 def edit_profile():
     return render_template('edit_profile.html')
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('profile'))
+
     if request.method == 'POST':
         user = database.get_doctor(request.form['login'])
         if user and check_password_hash(user['password'], request.form['password']):
@@ -80,18 +90,22 @@ def login():
     return render_template('login.html', title='Авторизация')
 
 @app.route('/')
+@login_required
 def alm_library():
     return render_template('alm_library.html', persons = database.get_all_clients())
 
 @app.route('/animals/<int:phone_number>')
+@login_required
 def alm_animals(phone_number):
     return render_template('alm_animals.html', animals = database.get_animals(phone_number))
 
 @app.route('/admissions/<int:animal_id>')
+@login_required
 def admissions(animal_id):
     return render_template('admissions.html', receptions = database.get_animal_receptions(animal_id))
 
 @app.route('/admission/<int:reception_id>')
+@login_required
 def admission(reception_id):
     return render_template("admission.html", info = database.get_reception(reception_id))
 

@@ -10,7 +10,7 @@ class UserLogin():
         self.__user = user
         return self
 
-    def if_authenticated(self):
+    def is_authenticated(self):
         return True
 
     def is_active(self):
@@ -20,4 +20,4 @@ class UserLogin():
         return False
 
     def get_id(self):
-        return str(self.__user['id'])
+        return str(self.__user['phone_number'])
