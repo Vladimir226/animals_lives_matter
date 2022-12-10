@@ -119,10 +119,20 @@ def admissions(animal_id):
 def admission(reception_id):
     return render_template("admission.html", info = database.get_reception(reception_id))
 
-@app.route('/search')
+@app.route('/search', methods=['POST', 'GET'])
 @login_required
 def search():
+    if request.method == 'POST':
+        # вот тут надо вызвать селекты и в persons закинуть результат поиска
+        searcher = request.form['search']
+        return redirect(url_for('search_result', persons = ...))
+
     return render_template("search.html")
+
+@app.route('/search/result')
+@login_required
+def search_result():
+    return render_template("search_result.html")
 
 if __name__ =="__main__":
     app.run(debug=True)

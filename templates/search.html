@@ -8,13 +8,13 @@ search
 <div class="edit-profile p-3 mt-5 shadow-lg rounded-3">
     <h3 class="list-title text-center mb-4">Поиск клиентов</h3>
 
-    <form class="d-flex">
+    <form action="/search" class="d-flex" method="POST">
         <div class="mb-3 flex-grow-1">
           <!-- <label for="search-input" class="form-label">Введите фамилию клиента</label> -->
-          <input type="email" class="form-control" id="search-input" aria-describedby="emailHelp" placeholder="фамилия">
+          <input type="text" name="search" class="form-control" id="search-input" aria-describedby="emailHelp" placeholder="фамилия">
           <div id="search-text-help" class="form-text">Например: Харитонов</div>
         </div>
-        <button type="submit" class="btn btn-primary align-self-start ms-2">Отправить</button>
+        <button type="submit" class="btn btn-primary align-self-start ms-2">Найти</button>
     </form>
 </div>
 
