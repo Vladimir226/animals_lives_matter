@@ -119,6 +119,10 @@ def admissions(animal_id):
 def admission(reception_id):
     return render_template("admission.html", info = database.get_reception(reception_id))
 
+@app.route('/search')
+@login_required
+def search():
+    return render_template("search.html")
 
 if __name__ =="__main__":
     app.run(debug=True)
