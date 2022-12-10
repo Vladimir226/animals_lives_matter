@@ -5,19 +5,21 @@ login
 {%endblock%}
 
 {%block body%}
-<div class="container_login p-3 m-5 shadow-lg rounded-3 position-absolute top-50 start-50 translate-middle">
-    <h3 class="label_login">Авторизация</h3>
-    <form action="/login" class="mx-auto" method="POST">
-        <div class="form-group d-flex flex-column align-items-center justify-content-center mx-auto">
-            <div class="mb-3">
-                <input type="number" name="login" class="form-control" id="exampleInputEmail1" placeholder="Логин">
+<div class="container">
+    <div class="container_login p-3 m-5 shadow-lg rounded-3 mx-auto">
+        <h3 class="label_login mb-3">Авторизация</h3>
+        <form action="/login" class="mx-auto" method="POST">
+            <div class="form-group d-flex flex-column  justify-content-center mx-auto">
+                <div class="mb-3 ">
+                    <input type="number" name="login" class="form-control" id="exampleInputEmail1" placeholder="Логин">
+                </div>
+                <div class="mb-5">
+                    <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Пароль">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button> 
+               
             </div>
-            <div class="mb-3">
-                <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Пароль">
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button> 
-           
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 {%endblock%}

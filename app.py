@@ -51,6 +51,11 @@ doctor_0 = {
 }
 doctors.append(doctor_0)
 
+@app.before_request
+def before_request():
+     g.auth = current_user.is_authenticated
+     print(current_user.is_authenticated)
+
 @app.route('/profile', methods=['GET','POST'])
 @login_required
 def profile():
@@ -89,6 +94,11 @@ def login():
 
     return render_template('login.html', title='Авторизация')
 
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('alm_library'))
+
 @app.route('/')
 @login_required
 def alm_library():
@@ -109,6 +119,10 @@ def admissions(animal_id):
 def admission(reception_id):
     return render_template("admission.html", info = database.get_reception(reception_id))
 
+@app.route('/search')
+@login_required
+def search():
+    return render_template("search.html")
 
 if __name__ =="__main__":
     app.run(debug=True)
