@@ -76,7 +76,7 @@ import db
 @app.route('/edit_profile')
 @login_required
 def edit_profile():
-    return render_template('edit_profile.html')
+    return render_template('edit_profile.html', doctor = database.get_doctor(current_user.get_id()))
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():

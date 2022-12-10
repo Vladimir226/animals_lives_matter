@@ -21,28 +21,28 @@ edit-profile
             <div class="row">
                 <div class="col-8">
                     <label for="fullname-edit-profile">ФИО:</label>
-                    <input type="text" value="" class="form-control" id="fullname-edit-profile" aria-describedby="fullname-edit-profile" placeholder="введите ФИО">
+                    <input type="text" value="{{doctor.surname}} {{ doctor.name }} {{ doctor.patronymic }}" class="form-control" id="fullname-edit-profile" aria-describedby="fullname-edit-profile" placeholder="Введите ФИО">
                     <small id="fullname-edit-profile" class="form-text text-muted">Например: Афанасьев Афанасий Афанасьевич</small>
                 </div>
-                <div class="col-4">
-                    <label for="phone-edit-profile">Номер телефона</label>
-                    <input type="text"  value="" class="form-control" id="phone-edit-profile" aria-describedby="phone-edit-profile" placeholder="введите номер телефона">
-                    <small id="phone-edit-profile" class="form-text text-muted">Например: +79999999999</small>
-                </div>
+{#                <div class="col-4">#}
+{#                    <label for="phone-edit-profile">Номер телефона</label>#}
+{#                    <input type="text"  value="" class="form-control" id="phone-edit-profile" aria-describedby="phone-edit-profile" placeholder="введите номер телефона">#}
+{#                    <small id="phone-edit-profile" class="form-text text-muted">Например: +79999999999</small>#}
+{#                </div>#}
             </div>
             
             <div class="row">
                 <div class="col-8">
                     <label for="specialization-edit-profile">Специальность:</label>
-                    <input type="text" value="" class="form-control" id="specialization-edit-profile" aria-describedby="specialization-edit-profile" placeholder="введите свою специальность">
-                    <small id="specialization-edit-profile" class="form-text text-muted">Например: Афанасьев Афанасий Афанасьевич</small>
+                    <input type="text" value="{{ doctor.qualification }}" class="form-control" id="specialization-edit-profile" aria-describedby="specialization-edit-profile" placeholder="Введите свою специальность">
+                    <small id="specialization-edit-profile" class="form-text text-muted">Например: Терапевт</small>
                 </div>
             </div>
 
-            <div class="form-group mb-5">
-                <label for="about-edit-profile">О себе</label>
-                <textarea class="form-control" id="about-edit-profile" rows="5" placeholder="Расскажите о себе"></textarea>
-            </div>
+{#            <div class="form-group mb-5">#}
+{#                <label for="about-edit-profile">О себе</label>#}
+{#                <textarea class="form-control" id="about-edit-profile" rows="5" placeholder="Расскажите о себе"></textarea>#}
+{#            </div>#}
         </div>
     </div>
     <div class="d-flex justify-content-end">
