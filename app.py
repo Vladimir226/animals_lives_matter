@@ -73,10 +73,15 @@ def add_admission():
     return render_template('add_admission.html')
 import db
 
-@app.route('/edit_profile')
+@app.route('/edit_profile', methods=['POST', 'GET'])
 @login_required
 def edit_profile():
-    return render_template('edit_profile.html')
+    if request.method == 'POST':
+        # вот тут данные из формы
+        print(request.form['full-name'])
+        print(request.form['qualification'])
+        return redirect(url_for('profile'))
+    return render_template('edit_profile.html', doctor = database.get_doctor(current_user.get_id()))
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():

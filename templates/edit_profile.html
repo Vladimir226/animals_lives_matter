@@ -7,47 +7,47 @@ edit-profile
 {%block body%}
 <div class="edit-profile p-3 mt-5 shadow-lg rounded-3">
     <h3 class="edit-profile-title text-center mb-5">Редактирование профиля</h3> 
-    <div class="edit-profile-container d-flex">
-        <div class="edit-avatar">
-            <div class="profile-img rounded-2 mb-3"></div>
-            <form>
-                <div class="form-group">
-                <!-- <label for="choose-avatar">Загрузить аватар</label> -->
-                <input type="file" class="form-control-file" id="choose-avatar">
-                </div>
-            </form>
-        </div>
-        <div class="edit-info flex-grow-1">
-            <div class="row">
-                <div class="col-8">
-                    <label for="fullname-edit-profile">ФИО:</label>
-                    <input type="text" value="" class="form-control" id="fullname-edit-profile" aria-describedby="fullname-edit-profile" placeholder="введите ФИО">
-                    <small id="fullname-edit-profile" class="form-text text-muted">Например: Афанасьев Афанасий Афанасьевич</small>
-                </div>
-                <div class="col-4">
-                    <label for="phone-edit-profile">Номер телефона</label>
-                    <input type="text"  value="" class="form-control" id="phone-edit-profile" aria-describedby="phone-edit-profile" placeholder="введите номер телефона">
-                    <small id="phone-edit-profile" class="form-text text-muted">Например: +79999999999</small>
-                </div>
+    <form action="/edit_profile" class="mx-auto" method="POST">
+        <div class="edit-profile-container d-flex">
+            <div class="edit-avatar">
+                <div class="profile-img rounded-2 mb-3"></div>
+                    <div class="form-group">
+                    <!-- <label for="choose-avatar">Загрузить аватар</label> -->
+                    <input type="file" class="form-control-file" id="choose-avatar">
+                    </div>
             </div>
-            
-            <div class="row">
-                <div class="col-8">
-                    <label for="specialization-edit-profile">Специальность:</label>
-                    <input type="text" value="" class="form-control" id="specialization-edit-profile" aria-describedby="specialization-edit-profile" placeholder="введите свою специальность">
-                    <small id="specialization-edit-profile" class="form-text text-muted">Например: Афанасьев Афанасий Афанасьевич</small>
+            <div class="edit-info flex-grow-1">
+                <div class="row">
+                    <div class="col-8">
+                        <label for="fullname-edit-profile">ФИО:</label>
+                        <input name="full-name" type="text" value="{{doctor.surname}} {{ doctor.name }} {{ doctor.patronymic }}" class="form-control" id="fullname-edit-profile" aria-describedby="fullname-edit-profile" placeholder="Введите ФИО">
+                        <small id="fullname-edit-profile" class="form-text text-muted">Например: Афанасьев Афанасий Афанасьевич</small>
+                    </div>
+    {#                <div class="col-4">#}
+    {#                    <label for="phone-edit-profile">Номер телефона</label>#}
+    {#                    <input type="text"  value="" class="form-control" id="phone-edit-profile" aria-describedby="phone-edit-profile" placeholder="введите номер телефона">#}
+    {#                    <small id="phone-edit-profile" class="form-text text-muted">Например: +79999999999</small>#}
+    {#                </div>#}
                 </div>
-            </div>
+                
+                <div class="row">
+                    <div class="col-8">
+                        <label for="specialization-edit-profile">Специальность:</label>
+                        <input name="qualification" type="text" value="{{ doctor.qualification }}" class="form-control" id="specialization-edit-profile" aria-describedby="specialization-edit-profile" placeholder="Введите свою специальность">
+                        <small id="specialization-edit-profile" class="form-text text-muted">Например: Терапевт</small>
+                    </div>
+                </div>
 
-            <div class="form-group mb-5">
-                <label for="about-edit-profile">О себе</label>
-                <textarea class="form-control" id="about-edit-profile" rows="5" placeholder="Расскажите о себе"></textarea>
+    {#            <div class="form-group mb-5">#}
+    {#                <label for="about-edit-profile">О себе</label>#}
+    {#                <textarea class="form-control" id="about-edit-profile" rows="5" placeholder="Расскажите о себе"></textarea>#}
+    {#            </div>#}
             </div>
         </div>
-    </div>
-    <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-primary ">Сохранить данные</button>
-    </div>
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary ">Сохранить данные</button>
+        </div>
+    </form>
     
 </div>
 {%endblock%}
