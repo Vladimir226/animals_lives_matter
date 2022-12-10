@@ -10,18 +10,31 @@ library
 
 <div class="list-receptions mt-5">
     <h3 class="list-title text-center">Клиенты</h3>
+
+    <div class="library-header-btn d-flex justify-content-between mx-3">
+        <button type="button" class="btn btn-primary">Поиск</button>
+        <button type="button" class="btn btn-warning">Удалить все записи</button>
+    </div>
+    
     {% for person in persons %}
         <div class="d-flex flex-column">
             <a href="{{url_for('alm_animals', phone_number = person.phone_number)}}" class="library-a text-decoration-none text-reset">
                 <div class="h-reception shadow p-3 rounded-3 m-3 ">
                     <div class="h-reception-container d-flex align-items-center">
-                        <div class="h-reception-info   p-2 border border-2 rounded-2 flex-grow-1 ">
+                        <div class="h-reception-info   p-2 border border-2 rounded-2 flex-grow-1">
                             <ul class="h-reception-ul ">
                                 <li class="full-name"> <h6 class="d-inline">ФИО:</h6> <div class="text d-inline">{{person.surname}}  {{person.name}} {{person.patronymic}}</div></li>
                                 <li class="phone"> <h6 class="d-inline">Номер телефона:</h6> <div class="text d-inline">+7{{person.phone_number}}</div></li>
                                 <li class="receptions_number"> <h6 class="d-inline">Количество посещений:</h6> <div class="text d-inline">{{person.receptions_number}}</div></li>
                             </ul>
                         </div>
+                        <object type="owo/uwu" class="align-self-stretch object">
+                            <a href="{{url_for('profile')}}">
+                                <div class=" btn-l-delete bg-warning h-100 border-2 rounded-2">
+                                        <div class="vertical-text">Удалить</div>
+                                </div>
+                            </a>
+                        </object>
                     </div>
                 </div>
             </a>

@@ -77,6 +77,22 @@ ul{
 
  }
 
+ .btn-l-delete
+ {
+
+
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+    
+
+    padding: 5px;
+ }
+ .object a 
+ {
+     color: black;
+ }
+
  /* .profile-btn-edit
  {
      margin-top: 20px;
