@@ -1,7 +1,15 @@
 from sqlalchemy import create_engine
-
+from werkzeug.security import generate_password_hash
 
 class ALM:
+    client_field = ['phone_number', 'surname', 'name', 'patronymic', 'receptions_number']
+    animal_field = ['id', 'owner_phone_number', 'nickname', 'gender', 'age', 'type', 'breed', 'color',
+                    'receptions_number']
+    reception_field = ['id', 'animal_id', 'doctor_id', 'date', 'time', 'description', 'research', 'diagnosis',
+                       'recommendations']
+    doctor_field = ['phone_number', 'id', 'surname', 'name', 'patronymic', 'qualification', 'receptions_number',
+                    'password']
+
     def __init__(self, user, password, ip, port, dbname="alm"):
         self.user = user
         self.password = password
@@ -20,7 +28,7 @@ class ALM:
         self.create_tables()
         self.set_triggers()
         self.set_insert_functions()
-        # self.set_select_functions()
+        self.set_select_functions()
 
     def create_db(self):
         query_create = f"""
@@ -304,83 +312,276 @@ class ALM:
         result = self.cursor.execute(query_create)
         return self.insert_end(result)
 
-    # ПЕРЕДЕЛАТЬ ЧЕРЕЗ ПРОЦЕДУРЫ
+    @staticmethod
+    def sql_parser(str):
+        if str[0] == '(':
+            str = str[1:]
+        if str[-1] == ')':
+            str = str[:-1]
+        open_quote = 0
+        cur_block = 0
+        res = [[]]
+        for i in range(len(str)):
+            if str[i] != '"' and str[i] != ",":
+                res[cur_block].append(str[i])
+            else:
+                if str[i] == ",":
+                    if open_quote % 2 == 0:
+                        res.append([])
+                        cur_block += 1
+                    else:
+                        res[cur_block].append(str[i])
+                if str[i] == '"':
+                    res[cur_block].append(str[i])
+                    open_quote += 1
+        for i in range(len(res)):
+            if len(res[i]):
+                if res[i][0] == '"':
+                    res[i] = res[i][1:]
+                if res[i][-1] == '"':
+                    res[i] = res[i][:-1]
+                res[i] = ''.join(res[i])
+                res[i] = res[i].replace('""', '"')
+            else:
+                res[i] = None
+        return res
+
+    def set_select_functions(self):
+        query_create = """
+        CREATE OR REPLACE FUNCTION get_all_clients()
+        RETURNS SETOF client
+        AS $$
+        SELECT * FROM client;
+        $$ LANGUAGE SQL;        
+        """
+        self.cursor.execute(query_create)
+
+        query_create = """
+        CREATE OR REPLACE FUNCTION get_animals(phone_number numeric(10))
+        RETURNS TABLE(
+        id integer,
+        owner_phone_number numeric(10),
+        nickname text,
+        gender varchar(6),
+        age numeric(2),
+        type text,
+        breed text,
+        color text,
+        receptions_number integer
+        )
+        AS $$
+        SELECT 
+        animal.id,
+        animal.owner_phone_number,
+        animal.nickname,
+        animal.gender,
+        animal.age,
+        animal.type,
+        animal.breed,
+        animal.color,
+        animal.receptions_number
+        FROM animal WHERE owner_phone_number = phone_number;
+        $$ LANGUAGE SQL;        
+        """
+        self.cursor.execute(query_create)
+
+        query_create = """
+        CREATE OR REPLACE FUNCTION get_animal_receptions(check_id integer)
+        RETURNS SETOF reception
+        AS $$
+        SELECT * FROM reception WHERE animal_id=check_id;
+        $$ LANGUAGE SQL;        
+        """
+        self.cursor.execute(query_create)
+
+        query_create = """
+        CREATE OR REPLACE FUNCTION get_reception(check_id integer)
+        RETURNS TABLE (
+        phone_number1 numeric(10),
+        surname1 text,
+        name1 text,
+        patronymic1 text,
+        receptions_number1 integer,
+        
+        id2 integer,
+        owner_phone_number2 numeric(10),
+        nickname2 text,
+        gender2 varchar(6),
+        age2 numeric(2),
+        type2 text,
+        breed2 text,
+        color2 text,
+        receptions_number2 integer,
+        
+        id3 integer,
+        animal_id3 integer,
+        doctor_id3 integer,
+        date3 date,
+        time3 time,
+        description3 text,
+        research3 text,
+        diagnosis3 text,
+        recommendations3 text,
+        
+        phone_number4 numeric(10),
+        id4 integer,
+        surname4 text,
+        name4 text,
+        patronymic4 text,
+        qualification4 text,
+        receptions_number4 integer,
+        password4 text
+        )
+        AS $$
+        SELECT 
+        
+        client.phone_number,
+        client.surname,
+        client.name,
+        client.patronymic,
+        client.receptions_number,
+        
+        animal.id,
+        animal.owner_phone_number,
+        animal.nickname,
+        animal.gender,
+        animal.age,
+        animal.type,
+        animal.breed,
+        animal.color,
+        animal.receptions_number,
+        
+        reception.id,
+        reception.animal_id,
+        reception.doctor_id,
+        reception.date,
+        reception.time,
+        reception.description,
+        reception.research,
+        reception.diagnosis,
+        reception.recommendations,
+        
+        doctor.phone_number,
+        doctor.id,
+        doctor.surname,
+        doctor.name,
+        doctor.patronymic,
+        doctor.qualification,
+        doctor.receptions_number,
+        doctor.password
+        
+        FROM client JOIN animal on client.phone_number=animal.owner_phone_number JOIN reception on
+        animal.id = reception.animal_id JOIN doctor on reception.doctor_id = doctor.id WHERE reception.id = check_id;
+        $$ LANGUAGE SQL;        
+        """
+        self.cursor.execute(query_create)
+
+        query_create = """
+        CREATE OR REPLACE FUNCTION get_doctor(check_number numeric(10))
+        RETURNS TABLE(
+        phone_number numeric(10),
+        id integer,
+        surname text,
+        name text,
+        patronymic text,
+        qualification text,
+        receptions_number integer,
+        password text
+        )
+        AS $$
+        SELECT 
+        doctor.phone_number,
+        doctor.id,
+        doctor.surname,
+        doctor.name,
+        doctor.patronymic,
+        doctor.qualification,
+        doctor.receptions_number,
+        doctor.password
+        FROM doctor WHERE doctor.phone_number=check_number;
+        $$ LANGUAGE SQL;        
+        """
+        self.cursor.execute(query_create)
+
     def get_all_clients(self):
         query_create = """
-        SELECT * FROM client;
+        SELECT get_all_clients();
         """
         result = self.cursor.execute(query_create)
         clients = []
-        for i in result:
-            clients.append(dict(i))
+        for i, x in enumerate(result):
+            data = self.sql_parser(x[0])
+            clients.append(dict(zip(self.client_field, data)))
+            clients[i]['phone_number'] = int(clients[i]['phone_number'])
+            clients[i]['receptions_number'] = int(clients[i]['receptions_number'])
         return clients
 
-    # ПЕРЕДЕЛАТЬ ЧЕРЕЗ ПРОЦЕДУРЫ
     def get_animals(self, phone_number):
         query_create = f"""
-        SELECT * FROM animal WHERE owner_phone_number = {phone_number};
+        SELECT get_animals({phone_number});
         """
         result = self.cursor.execute(query_create)
         animals = []
-        for i in result:
-            animals.append(dict(i))
+        for i, x in enumerate(result):
+            data = self.sql_parser(x[0])
+            animals.append(dict(zip(self.animal_field, data)))
+            animals[i]['id'] = int(animals[i]['id'])
+            animals[i]['owner_phone_number'] = int(animals[i]['owner_phone_number'])
+            animals[i]['age'] = int(animals[i]['age'])
+            animals[i]['receptions_number'] = int(animals[i]['receptions_number'])
         return animals
 
-    # ПЕРЕДЕЛАТЬ ЧЕРЕЗ ПРОЦЕДУРЫ
     def get_animal_receptions(self, id):
         query_create = f"""
-        SELECT * FROM reception WHERE animal_id={id};
+        SELECT get_animal_receptions({id});
         """
         result = self.cursor.execute(query_create)
         receptions = []
-        for i in result:
-            receptions.append(dict(i))
+        for i, x in enumerate(result):
+            data = self.sql_parser(x[0])
+            receptions.append(dict(zip(self.reception_field, data)))
         return receptions
 
-    # ПЕРЕДЕЛАТЬ ЧЕРЕЗ ПРОЦЕДУРЫ
     def get_reception(self, id):
         query_create = f"""
-        SELECT * FROM client JOIN animal on client.phone_number=animal.owner_phone_number JOIN reception on
-        animal.id = reception.animal_id JOIN doctor on reception.doctor_id = doctor.id WHERE reception.id = {id};
+        SELECT get_reception({id});
         """
         result = self.cursor.execute(query_create)
-        receptions = {}
-        for i in result:
-            receptions['client'] = dict(
-                zip(['phone_number', 'surname', 'name', 'patronymic', 'receptions_number'], i[:6]))
-            receptions['animal'] = dict(
-                zip(['owner_phone_number', 'nickname', 'gender', 'age', 'type', 'breed', 'color', 'photo', 'receptions_number'], i[6:15]))
-            receptions['reception'] = dict(zip(['id', 'animal_id', 'doctor_id', 'date', 'time',
-                                                'description', 'research', 'diagnosis', 'recommendations'], i[15:24]))
-            receptions['doctor'] = dict(
-                zip(['phone_number', 'id', 'surname', 'name', 'patronymic', 'qualification', 'receptions_number', 'password', 'photo'], i[24:]))
-            print(i[:5], i[5:15])
-
-        return receptions
+        reception = {}
+        for i, x in enumerate(result):
+            data = self.sql_parser(x[0])
+            reception['client'] = dict(zip(self.client_field, data[0:5]))
+            reception['animal'] = dict(zip(self.animal_field, data[5:14]))
+            reception['reception'] = dict(zip(self.reception_field, data[14:23]))
+            reception['doctor'] = dict(zip(self.doctor_field, data[23:31]))
+        return reception
 
     def get_doctor(self, phone_number):
         query_create = f"""
-        SELECT * FROM doctor WHERE doctor.phone_number={phone_number};
+        SELECT get_doctor({phone_number});
         """
         result = self.cursor.execute(query_create)
-        receptions = {}
-        for i in result:
-            receptions = dict(i)
-        return receptions
+        doctor = {}
+        for i, x in enumerate(result):
+            data = self.sql_parser(x[0])
+            doctor = dict(zip(self.doctor_field, data))
+        return doctor
 
-# db = ALM("postgres", "123456", "localhost", "5432")
+
+# db = ALM("usr", "123456", "localhost", "5432")
 # print(db.insert_user(9998886600, 'Петров', 'Петр', 'Петрович'))
 # print(db.insert_user(9998886601, 'Иванов', 'Петр', 'Петрович'))
 # print(db.insert_animal(9998886600, 'Тузик', 'male', 3, 'Собака', 'Дворняга', 'Черный'))
 # print(db.insert_animal(9998886600, 'Барсик', 'male', 2, 'Кот', '', 'Рыжий'))
 # print(db.insert_animal(9998886601, 'Рекс', 'male', 1, 'Собака', 'Такса'))
-# print(db.insert_doctor(8005553535, 'Терапевт', 'xxx', 'Мартыненко', 'Владимир', 'Александрович'))
-# print(db.insert_doctor(8005553500, 'Терапевт', 'xxx', 'Сидоров', 'Петр', 'Аркадьевич'))
+# print(db.insert_doctor(8005553535, 'Терапевт', generate_password_hash('xxx'), 'Мартыненко', 'Владимир', 'Александрович'))
+# print(db.insert_doctor(8005553500, 'Терапевт', generate_password_hash('xxx'), 'Сидоров', 'Петр', 'Аркадьевич'))
 # print(db.insert_reception(2,1,'2022-12-08','20:30:00'))
 # print(db.insert_reception(1,2,'2022-12-08','20:30:00'))
 # print(db.insert_reception(1,2,'2022-12-08','20:30:00'))
 # print(db.insert_reception(3,1,'2022-12-08','20:30:00'))
 # print(db.get_all_clients())
-#print(db.get_animals(9998886600))
-#print(db.get_animal_receptions(2))
+# print(db.get_animals(9998886600))
+# print(db.get_animal_receptions(3))
 # print(db.get_reception(4))
+# print(db.get_doctor(8005553500))
