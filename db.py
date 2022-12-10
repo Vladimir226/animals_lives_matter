@@ -572,7 +572,7 @@ class ALM:
         return doctor
 
 
-db = ALM("usr", "123456", "localhost", "5432")
+# db = ALM("usr", "123456", "localhost", "5432")
 # print(db.insert_user(9998886600, 'Петров', 'Петр', 'Петрович'))
 # print(db.insert_user(9998886601, 'Иванов', 'Петр', 'Петрович'))
 # print(db.insert_animal(1, 'Тузик', 'male', 3, 'Собака', 'Дворняга', 'Черный'))
@@ -584,8 +584,8 @@ db = ALM("usr", "123456", "localhost", "5432")
 # print(db.insert_reception(1, 2, '2022-12-08', '20:30:00'))
 # print(db.insert_reception(1, 2, '2022-12-08', '20:30:00'))
 # print(db.insert_reception(3, 1, '2022-12-08', '20:30:00'))
-print(db.get_all_clients())
-print(db.get_animals(1))
-print(db.get_animal_receptions(3))
-print(db.get_reception(4))
-print(db.get_doctor(8005553500))
+# print(db.get_all_clients())
+# print(db.get_animals(1))
+# print(db.get_animal_receptions(3))
+# print(db.get_reception(4))
+# print(db.get_doctor(8005553500))
