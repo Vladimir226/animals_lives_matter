@@ -40,7 +40,7 @@ def closw_db(error):
         g.link_db.close()
 
 doctors = []
-doctor_0 = {  
+doctor_0 = {
     'id': 0,
     'full_name': 'Афанасий Владимир Алексеевич',
     'phone': '79991382501',
@@ -84,7 +84,10 @@ def login():
         return redirect(url_for('profile'))
 
     if request.method == 'POST':
-        user = database.get_doctor(request.form['login'])
+        req = request.form['login']
+        if req == '':
+            req = 0
+        user = database.get_doctor(req)
         if user and check_password_hash(user['password'], request.form['password']):
             userlogin = UserLogin().create(user)
             login_user(userlogin)
@@ -104,10 +107,10 @@ def logout():
 def alm_library():
     return render_template('alm_library.html', persons = database.get_all_clients())
 
-@app.route('/animals/<int:phone_number>')
+@app.route('/animals/<int:id>')
 @login_required
-def alm_animals(phone_number):
-    return render_template('alm_animals.html', animals = database.get_animals(phone_number))
+def alm_animals(id):
+    return render_template('alm_animals.html', animals = database.get_animals(id))
 
 @app.route('/admissions/<int:animal_id>')
 @login_required

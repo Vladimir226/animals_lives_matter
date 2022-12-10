@@ -1,9 +1,10 @@
 from sqlalchemy import create_engine
 from werkzeug.security import generate_password_hash
 
+
 class ALM:
-    client_field = ['phone_number', 'surname', 'name', 'patronymic', 'receptions_number']
-    animal_field = ['id', 'owner_phone_number', 'nickname', 'gender', 'age', 'type', 'breed', 'color',
+    client_field = ['phone_number', 'id', 'surname', 'name', 'patronymic', 'receptions_number']
+    animal_field = ['id', 'owner_id', 'nickname', 'gender', 'age', 'type', 'breed', 'color',
                     'receptions_number']
     reception_field = ['id', 'animal_id', 'doctor_id', 'date', 'time', 'description', 'research', 'diagnosis',
                        'recommendations']
@@ -59,6 +60,7 @@ class ALM:
         AS $$ 
         CREATE TABLE IF NOT EXISTS client(
         phone_number numeric(10) PRIMARY KEY,
+        id serial NOT NULL UNIQUE,
         surname text NOT NULL,
         name text NOT NULL,
         patronymic text,
@@ -69,7 +71,7 @@ class ALM:
 
         CREATE TABLE IF NOT EXISTS animal(
         id serial PRIMARY KEY,
-        owner_phone_number numeric(10) REFERENCES client(phone_number)
+        owner_id integer REFERENCES client(id)
         ON UPDATE CASCADE 
         ON DELETE CASCADE,
         nickname text NOT NULL,
@@ -127,8 +129,8 @@ class ALM:
         $$
         BEGIN
             UPDATE client SET receptions_number = receptions_number + 1
-            WHERE client.phone_number = 
-            ANY (SELECT owner_phone_number from animal WHERE animal.id = NEW.animal_id);
+            WHERE client.id = 
+            ANY (SELECT owner_id from animal WHERE animal.id = NEW.animal_id);
         
             UPDATE animal SET receptions_number = receptions_number + 1
             WHERE animal.id = NEW.animal_id;
@@ -173,7 +175,7 @@ class ALM:
 
         query_create = """
         CREATE OR REPLACE FUNCTION insert_animal(
-        new_owner_phone_number numeric(10),
+        new_owner_id integer,
         new_nickname text,
         new_gender varchar(6),
         new_age numeric(2),
@@ -183,11 +185,11 @@ class ALM:
         RETURNS text AS
         $func$
         BEGIN
-        IF EXISTS (SELECT 1 FROM client WHERE phone_number = new_owner_phone_number) THEN
+        IF EXISTS (SELECT 1 FROM client WHERE id = new_owner_id) THEN
            INSERT INTO animal
-           (owner_phone_number, nickname, gender, age, type, breed, color)
+           (owner_id, nickname, gender, age, type, breed, color)
            VALUES 
-           (new_owner_phone_number, new_nickname, new_gender, new_age, new_type, new_breed, new_color);
+           (new_owner_id, new_nickname, new_gender, new_age, new_type, new_breed, new_color);
            RETURN 'Successfully';
         ELSE
            RETURN 'Owner does not exist';
@@ -277,14 +279,14 @@ class ALM:
         result = self.cursor.execute(query_create)
         return self.insert_end(result)
 
-    def insert_animal(self, owner_phone_number, nickname, gender, age, type, breed='', color=''):
+    def insert_animal(self, owner_id, nickname, gender, age, type, breed='', color=''):
         breed = self.processing_null(breed)
         color = self.processing_null(color)
         if gender not in ['male', 'female']:
             return 'Incorrect gender (select male or female)'
         query_create = f"""
         BEGIN;
-        SELECT insert_animal({owner_phone_number}, '{nickname}', '{gender}', {age}, '{type}', {breed}, {color});
+        SELECT insert_animal({owner_id}, '{nickname}', '{gender}', {age}, '{type}', {breed}, {color});
         """
         result = self.cursor.execute(query_create)
         return self.insert_end(result)
@@ -357,10 +359,10 @@ class ALM:
         self.cursor.execute(query_create)
 
         query_create = """
-        CREATE OR REPLACE FUNCTION get_animals(phone_number numeric(10))
+        CREATE OR REPLACE FUNCTION get_animals(check_id integer)
         RETURNS TABLE(
         id integer,
-        owner_phone_number numeric(10),
+        owner_id integer,
         nickname text,
         gender varchar(6),
         age numeric(2),
@@ -372,7 +374,7 @@ class ALM:
         AS $$
         SELECT 
         animal.id,
-        animal.owner_phone_number,
+        animal.owner_id,
         animal.nickname,
         animal.gender,
         animal.age,
@@ -380,7 +382,7 @@ class ALM:
         animal.breed,
         animal.color,
         animal.receptions_number
-        FROM animal WHERE owner_phone_number = phone_number;
+        FROM animal WHERE owner_id = check_id;
         $$ LANGUAGE SQL;        
         """
         self.cursor.execute(query_create)
@@ -398,13 +400,14 @@ class ALM:
         CREATE OR REPLACE FUNCTION get_reception(check_id integer)
         RETURNS TABLE (
         phone_number1 numeric(10),
+        id1 integer,
         surname1 text,
         name1 text,
         patronymic1 text,
         receptions_number1 integer,
         
         id2 integer,
-        owner_phone_number2 numeric(10),
+        owner_id2 numeric(10),
         nickname2 text,
         gender2 varchar(6),
         age2 numeric(2),
@@ -436,13 +439,14 @@ class ALM:
         SELECT 
         
         client.phone_number,
+        client.id,
         client.surname,
         client.name,
         client.patronymic,
         client.receptions_number,
         
         animal.id,
-        animal.owner_phone_number,
+        animal.owner_id,
         animal.nickname,
         animal.gender,
         animal.age,
@@ -470,7 +474,7 @@ class ALM:
         doctor.receptions_number,
         doctor.password
         
-        FROM client JOIN animal on client.phone_number=animal.owner_phone_number JOIN reception on
+        FROM client JOIN animal on client.id=animal.owner_id JOIN reception on
         animal.id = reception.animal_id JOIN doctor on reception.doctor_id = doctor.id WHERE reception.id = check_id;
         $$ LANGUAGE SQL;        
         """
@@ -516,9 +520,9 @@ class ALM:
             clients[i]['receptions_number'] = int(clients[i]['receptions_number'])
         return clients
 
-    def get_animals(self, phone_number):
+    def get_animals(self, id):
         query_create = f"""
-        SELECT get_animals({phone_number});
+        SELECT get_animals({id});
         """
         result = self.cursor.execute(query_create)
         animals = []
@@ -526,7 +530,7 @@ class ALM:
             data = self.sql_parser(x[0])
             animals.append(dict(zip(self.animal_field, data)))
             animals[i]['id'] = int(animals[i]['id'])
-            animals[i]['owner_phone_number'] = int(animals[i]['owner_phone_number'])
+            animals[i]['owner_id'] = int(animals[i]['owner_id'])
             animals[i]['age'] = int(animals[i]['age'])
             animals[i]['receptions_number'] = int(animals[i]['receptions_number'])
         return animals
@@ -550,10 +554,10 @@ class ALM:
         reception = {}
         for i, x in enumerate(result):
             data = self.sql_parser(x[0])
-            reception['client'] = dict(zip(self.client_field, data[0:5]))
-            reception['animal'] = dict(zip(self.animal_field, data[5:14]))
-            reception['reception'] = dict(zip(self.reception_field, data[14:23]))
-            reception['doctor'] = dict(zip(self.doctor_field, data[23:31]))
+            reception['client'] = dict(zip(self.client_field, data[0:6]))
+            reception['animal'] = dict(zip(self.animal_field, data[6:15]))
+            reception['reception'] = dict(zip(self.reception_field, data[15:24]))
+            reception['doctor'] = dict(zip(self.doctor_field, data[24:32]))
         return reception
 
     def get_doctor(self, phone_number):
@@ -568,20 +572,20 @@ class ALM:
         return doctor
 
 
-# db = ALM("usr", "123456", "localhost", "5432")
+db = ALM("usr", "123456", "localhost", "5432")
 # print(db.insert_user(9998886600, 'Петров', 'Петр', 'Петрович'))
 # print(db.insert_user(9998886601, 'Иванов', 'Петр', 'Петрович'))
-# print(db.insert_animal(9998886600, 'Тузик', 'male', 3, 'Собака', 'Дворняга', 'Черный'))
-# print(db.insert_animal(9998886600, 'Барсик', 'male', 2, 'Кот', '', 'Рыжий'))
-# print(db.insert_animal(9998886601, 'Рекс', 'male', 1, 'Собака', 'Такса'))
+# print(db.insert_animal(1, 'Тузик', 'male', 3, 'Собака', 'Дворняга', 'Черный'))
+# print(db.insert_animal(2, 'Барсик', 'male', 2, 'Кот', '', 'Рыжий'))
+# print(db.insert_animal(2, 'Рекс', 'male', 1, 'Собака', 'Такса'))
 # print(db.insert_doctor(8005553535, 'Терапевт', generate_password_hash('xxx'), 'Мартыненко', 'Владимир', 'Александрович'))
 # print(db.insert_doctor(8005553500, 'Терапевт', generate_password_hash('xxx'), 'Сидоров', 'Петр', 'Аркадьевич'))
-# print(db.insert_reception(2,1,'2022-12-08','20:30:00'))
-# print(db.insert_reception(1,2,'2022-12-08','20:30:00'))
-# print(db.insert_reception(1,2,'2022-12-08','20:30:00'))
-# print(db.insert_reception(3,1,'2022-12-08','20:30:00'))
-# print(db.get_all_clients())
-# print(db.get_animals(9998886600))
-# print(db.get_animal_receptions(3))
-# print(db.get_reception(4))
-# print(db.get_doctor(8005553500))
+# print(db.insert_reception(2, 1, '2022-12-08', '20:30:00'))
+# print(db.insert_reception(1, 2, '2022-12-08', '20:30:00'))
+# print(db.insert_reception(1, 2, '2022-12-08', '20:30:00'))
+# print(db.insert_reception(3, 1, '2022-12-08', '20:30:00'))
+print(db.get_all_clients())
+print(db.get_animals(1))
+print(db.get_animal_receptions(3))
+print(db.get_reception(4))
+print(db.get_doctor(8005553500))
