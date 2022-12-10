@@ -51,6 +51,11 @@ doctor_0 = {
 }
 doctors.append(doctor_0)
 
+@app.before_request
+def before_request():
+     g.auth = current_user.is_authenticated
+     print(current_user.is_authenticated)
+
 @app.route('/profile', methods=['GET','POST'])
 @login_required
 def profile():
@@ -88,6 +93,11 @@ def login():
     flash('Неверная пара логин/пароль', 'error')
 
     return render_template('login.html', title='Авторизация')
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('alm_library'))
 
 @app.route('/')
 @login_required

@@ -1,4 +1,5 @@
 from sqlalchemy import create_engine
+from werkzeug.security import generate_password_hash
 
 
 class ALM:
@@ -374,13 +375,13 @@ class ALM:
 # print(db.insert_animal(9998886600, 'Тузик', 'male', 3, 'Собака', 'Дворняга', 'Черный'))
 # print(db.insert_animal(9998886600, 'Барсик', 'male', 2, 'Кот', '', 'Рыжий'))
 # print(db.insert_animal(9998886601, 'Рекс', 'male', 1, 'Собака', 'Такса'))
-# print(db.insert_doctor(8005553535, 'Терапевт', 'xxx', 'Мартыненко', 'Владимир', 'Александрович'))
-# print(db.insert_doctor(8005553500, 'Терапевт', 'xxx', 'Сидоров', 'Петр', 'Аркадьевич'))
+# print(db.insert_doctor(8005553535, 'Терапевт', generate_password_hash('xxx'), 'Мартыненко', 'Владимир', 'Александрович'))
+# print(db.insert_doctor(8005553500, 'Терапевт', generate_password_hash('xxx'), 'Сидоров', 'Петр', 'Аркадьевич'))
 # print(db.insert_reception(2,1,'2022-12-08','20:30:00'))
 # print(db.insert_reception(1,2,'2022-12-08','20:30:00'))
 # print(db.insert_reception(1,2,'2022-12-08','20:30:00'))
 # print(db.insert_reception(3,1,'2022-12-08','20:30:00'))
 # print(db.get_all_clients())
-#print(db.get_animals(9998886600))
-#print(db.get_animal_receptions(2))
+# print(db.get_animals(9998886600))
+# print(db.get_animal_receptions(2))
 # print(db.get_reception(4))

@@ -31,8 +31,12 @@
             </form> -->
     
             <div class="text-end">
+              {%if g.auth %}
+              <button type="button" class="btn btn-outline-light me-2"><a href="{{url_for('logout')}}">Logout</a></button>
+              {% else %}
               <button type="button" class="btn btn-outline-light me-2"><a href="{{ url_for('login') }}">Login</a></button>
-              <button type="button" class="btn btn-warning">Sign-up</button>
+              {% endif %}
+              <!-- <button type="button" class="btn btn-warning">Sign-up</button> -->
             </div>
           </div>
         </div>
