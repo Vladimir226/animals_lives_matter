@@ -15,8 +15,9 @@ library animals
         </div>
         <div class="animals-owner">
             <!-- вставь сюда ФИО владельца -->
-            <h6>ФИО: Мартыненко Владимир Александрович</h6> 
-            <h6>Номер телефона: +79991382501</h6> 
+            <h6>ФИО: {{ person.surname }} {{person.name}} {{ person.patronymic }}</h6>
+            <h6>Номер телефона: +7{{ person.phone_number }}</h6>
+            <h6>Количество посещений: {{ person.receptions_number }}</h6>
         </div>
     </div>
     <h3 class="list-title text-center">Животные</h3>
@@ -44,7 +45,7 @@ library animals
         </div>
     {% endfor %} 
 
-    <a href="{{url_for('add_animal')}}" class="library-a text-decoration-none text-reset">
+    <a href="{{url_for('add_animal', client_id = person.id)}}" class="library-a text-decoration-none text-reset">
         <div class="btn-plus-reception shadow-sm bg-primary w-25 mx-auto rounded-3 d-flex py-1 my-5">
             <img src="../static/icons/plus.svg"  class="img-plus-reception">
             <div class="text-nowrap text-center flex-grow-1 align-self-center text-light">Добавить животное</div>

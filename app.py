@@ -8,7 +8,7 @@ from werkzeug.security import check_password_hash
 from db import *
 from UserLogin import UserLogin
 
-#configurate
+# configurate
 DATABASE = '/tmp/app.db'
 DEBUG = True
 SECRET_KEY = 'vovan'
@@ -16,17 +16,17 @@ SECRET_KEY = 'vovan'
 app = Flask(__name__)
 app.config.from_object(__name__)
 
-app.config.update(dict(DATABASE=os.path.join(app.root_path,'app.db')))
+app.config.update(dict(DATABASE=os.path.join(app.root_path, 'app.db')))
 
 # login_manager = LoginManager(app)
-
-
 
 
 database = ALM("postgres", "123456", "localhost", "5432")
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+
+
 # login_manager.login_message = 'Авторизуйтесь для доступа к закрытым сессия'
 # login_manager.login_message_category = 'success'
 @login_manager.user_loader
@@ -34,10 +34,12 @@ def load_user(user_phone):
     print("loader user")
     return UserLogin().fromDB(user_phone, database)
 
+
 @app.teardown_appcontext
 def closw_db(error):
-    if hasattr(g,'link_db'):
+    if hasattr(g, 'link_db'):
         g.link_db.close()
+
 
 doctors = []
 doctor_0 = {
@@ -51,29 +53,42 @@ doctor_0 = {
 }
 doctors.append(doctor_0)
 
+
 @app.before_request
 def before_request():
-     g.auth = current_user.is_authenticated
-     print(current_user.is_authenticated)
+    g.auth = current_user.is_authenticated
+    print(current_user.is_authenticated)
 
-@app.route('/profile', methods=['GET','POST'])
+
+@app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
     # db= get_db()
     doc = database.get_doctor(current_user.get_id())
-    return render_template("profile.html", doctor=doc, receptions = database.get_doctor_receptions(doc['id'])[:5])
+    return render_template("profile.html", doctor=doc, receptions=database.get_doctor_receptions(doc['id'])[:5])
+
 
 @app.route('/admissions_history')
 @login_required
 def admissions_history():
     doc = database.get_doctor(current_user.get_id())
-    return render_template("admissions_history.html", receptions = database.get_doctor_receptions(doc['id']))
+    return render_template("admissions_history.html", receptions=database.get_doctor_receptions(doc['id']))
 
-@app.route('/add_admission')
+
+@app.route('/add_admission/<int:animal_id>', methods=['POST', 'GET'])
 @login_required
-def add_admission():
-    return render_template('add_admission.html')
-import db
+def add_admission(animal_id):
+    if request.method == 'POST':
+        description = request.form['description']
+        research = request.form['research']
+        diagnosis = request.form['diagnosis']
+        recommendation = request.form['recommendation']
+        doctor_id = database.get_doctor(current_user.get_id())['id']
+        database.insert_reception(animal_id, doctor_id, '2022-12-11', '19:00:00', description,
+                                  research, diagnosis, recommendation)
+        return redirect(url_for('admissions', animal_id=animal_id))
+    return render_template('add_admission.html', animal_id=animal_id)
+
 
 @app.route('/edit_profile', methods=['POST', 'GET'])
 @login_required
@@ -87,7 +102,8 @@ def edit_profile():
         qualification = request.form['qualification']
         database.update_doctor_info(id, surname, name, patronymic, qualification)
         return redirect(url_for('profile'))
-    return render_template('edit_profile.html', doctor = database.get_doctor(current_user.get_id()))
+    return render_template('edit_profile.html', doctor=database.get_doctor(current_user.get_id()))
+
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -108,36 +124,44 @@ def login():
 
     return render_template('login.html', title='Авторизация')
 
+
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('alm_library'))
+
 
 @app.route('/', methods=['POST', 'GET'])
 @login_required
 def alm_library():
     if request.method == 'POST':
         # вот тут удаление всех клиентов
-        return redirect(url_for('alm_library', persons = database.get_all_clients()))
-    return render_template('alm_library.html', persons = database.get_all_clients())
+        return redirect(url_for('alm_library', persons=database.get_all_clients()))
+    return render_template('alm_library.html', persons=database.get_all_clients())
+
 
 @app.route('/animals/<int:id>', methods=['POST', 'GET'])
 @login_required
 def alm_animals(id):
     if request.method == 'POST':
         # вот тут по id удаляй клиента, т.к. нажата кнопка. Из реквеста брать ничего не надо.
-        return redirect(url_for('alm_library', persons = database.get_all_clients()))
-    return render_template('alm_animals.html', animals = database.get_animals(id))
+        return redirect(url_for('alm_library', persons=database.get_all_clients()))
+    return render_template('alm_animals.html', animals=database.get_animals(id),
+                           person=database.get_client(id))
+
 
 @app.route('/admissions/<int:animal_id>')
 @login_required
 def admissions(animal_id):
-    return render_template('admissions.html', receptions = database.get_animal_receptions(animal_id))
+    return render_template('admissions.html', receptions=database.get_animal_receptions(animal_id), animal_id=animal_id)
+
 
 @app.route('/admission/<int:reception_id>')
 @login_required
 def admission(reception_id):
-    return render_template("admission.html", info = database.get_reception(reception_id))
+
+    return render_template("admission.html", info=database.get_reception(reception_id))
+
 
 @app.route('/search', methods=['POST', 'GET'])
 @login_required
@@ -145,28 +169,40 @@ def search():
     if request.method == 'POST':
         # вот тут надо вызвать селекты и в persons закинуть результат поиска
         searcher = request.form['search']
-        return redirect(url_for('search', searcher = searcher, status='progress'))
+        return redirect(url_for('search', searcher=searcher, status='progress'))
     searcher = request.args['searcher']
     status = request.args['status']
-    return render_template("search.html", persons = database.get_by_last_name(searcher), status = status, req = searcher)
+    return render_template("search.html", persons=database.get_by_last_name(searcher), status=status, req=searcher)
 
 
 @app.route('/add_client', methods=['POST', 'GET'])
 @login_required
 def add_client():
     if request.method == 'POST':
-        # тут написать, что происходит после добавления клиента
-        pass
+        surname = request.form['surname']
+        name = request.form['name']
+        patronymic = request.form['patronymic']
+        phone = request.form['phone']
+        database.insert_client(phone, surname, name, patronymic)
+        return redirect(url_for('alm_library'))
     return render_template("add_client.html")
 
-@app.route('/add_animal', methods=['POST', 'GET'])
-@login_required
-def add_animal():
-    if request.method == 'POST':
-        # тут написать, что происходит после добавления животного
-        pass
 
-    return render_template("add_animal.html")
+@app.route('/add_animal/<int:client_id>', methods=['POST', 'GET'])
+@login_required
+def add_animal(client_id):
+    if request.method == 'POST':
+        nickname = request.form['nickname']
+        gender = request.form['gender']
+        age = int(request.form['age'])
+        type = request.form['type']
+        breed = request.form['breed']
+        color = request.form['color']
+        database.insert_animal(client_id, nickname, gender, age, type, breed, color)
+        return redirect(url_for('alm_animals', id=client_id))
+
+    return render_template("add_animal.html", client_id=client_id)
+
 
 # @app.route('/search/result')
 # @login_required
@@ -174,5 +210,5 @@ def add_animal():
 #     searcher = request.args['searcher']
 #     return render_template("search_result.html", persons = database.get_by_last_name(searcher))
 
-if __name__ =="__main__":
+if __name__ == "__main__":
     app.run(debug=True)

@@ -593,6 +593,28 @@ class ALM:
         """
         self.cursor.execute(query_create)
 
+        query_create = """
+        CREATE OR REPLACE FUNCTION get_client(check_id integer)
+        RETURNS SETOF client
+        AS $$
+        SELECT * FROM client WHERE id=check_id;
+        $$ LANGUAGE SQL;
+        """
+        self.cursor.execute(query_create)
+
+    def get_client(self, check_id):
+        query_create = f"""
+        SELECT get_client({check_id});
+        """
+        result = self.cursor.execute(query_create)
+        clients = []
+        for i, x in enumerate(result):
+            data = self.sql_parser(x[0])
+            clients.append(dict(zip(self.client_field, data)))
+            clients[i]['phone_number'] = int(clients[i]['phone_number'])
+            clients[i]['receptions_number'] = int(clients[i]['receptions_number'])
+        return clients[0]
+
     def get_all_clients(self):
         query_create = """
         SELECT get_all_clients();
@@ -745,7 +767,7 @@ class ALM:
         """
         self.cursor.execute(query_create)
 
-# db = ALM("postgres", "123456", "localhost", "5432")
+db = ALM("postgres", "123456", "localhost", "5432")
 # print(db.insert_client(9998886600, 'Петров', 'Петр', 'Петрович'))
 # print(db.insert_client(9998886601, 'Иванов', 'Петр', 'Петрович'))
 # print(db.insert_client(9998886605, 'Ивановский', 'Петр', 'Петрович'))
@@ -768,3 +790,4 @@ class ALM:
 # print(db.get_doctor_receptions(2))
 # db.delete_client(5)
 # db.delete_all_clients()
+# print(db.get_client(3))
