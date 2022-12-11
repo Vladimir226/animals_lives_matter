@@ -1,33 +1,62 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    add_admission
+add_admission
 {% endblock %}
 
 {% block body %}
-    <div class="p-3 my-5 shadow-lg rounded-3">
-        <h3 class="edit-profile-title text-center mb-5">Новый приём</h3>
-        <form action="/add_admission/{{ animal_id }}" class="mx-auto" method="POST">
-            <div class="form-group mb-2">
-                <label for="diagnostic-textarea">Диагностические исследования</label>
-                <textarea class="form-control" id="diagnostic-textarea" rows="3" placeholder="" name="research"></textarea>
+<div class="p-3 my-5 shadow-lg rounded-3">
+    <h3 class="edit-profile-title text-center mb-5">Новый приём</h3>
+    <form action="/add_admission/{{ animal_id }}" class="mx-auto" method="POST">
+
+        <fieldset disabled id="field-set-date">
+            <div class="row mb-2">
+                <div class="col-auto">
+                    <label for="inputDate" class="col-form-label">Дата: </label>
+                </div>
+                <div class="col-auto">
+                    <input type="date" id="inputDate" class="form-control">
+                </div>
             </div>
-            <div class="form-group mb-2">
-                <label for="description-textarea">Описание</label>
-                <textarea class="form-control" id="description-textare" rows="3" placeholder="" name="description"></textarea>
+            <div class="row mb-2">
+                <div class="col-auto">
+                    <label for="inputTime" class="col-form-label">Время: </label>
+                </div>
+                <div class="col-auto">
+                    <input type="time" id="inputTime" class="form-control">
+                </div>
             </div>
-            <div class="form-group mb-2">
-                <label for="diagnosis-textarea">Диагноз</label>
-                <textarea class="form-control" id="diagnosis-textare" rows="1" placeholder="" name="diagnosis"></textarea>
-            </div>
-            <div class="form-group mb-5">
-                <label for="recommendations-textarea">Рекомендации</label>
-                <textarea class="form-control" id="recommendations-textare" rows="3" placeholder="" name="recommendation"></textarea>
-            </div>
-            <div class="d-flex justify-content-center mx-auto my-3">
-                <button type="submit" class="btn btn-primary ">Добавить приём</button>
-            </div>
-        </form>
-    </div>
+        </fieldset>
+
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckDate">
+            <label class="form-check-label" for="flexCheckDate">
+                Изменить дату или время
+            </label>
+        </div>
+
+        <div class="form-group mb-2">
+            <label for="diagnostic-textarea">Диагностические исследования</label>
+            <textarea class="form-control" id="diagnostic-textarea" rows="3" placeholder="" name="research"></textarea>
+        </div>
+        <div class="form-group mb-2">
+            <label for="description-textarea">Описание</label>
+            <textarea class="form-control" id="description-textare" rows="3" placeholder=""
+                name="description"></textarea>
+        </div>
+        <div class="form-group mb-2">
+            <label for="diagnosis-textarea">Диагноз</label>
+            <textarea class="form-control" id="diagnosis-textare" rows="1" placeholder="" name="diagnosis"></textarea>
+        </div>
+        <div class="form-group mb-5">
+            <label for="recommendations-textarea">Рекомендации</label>
+            <textarea class="form-control" id="recommendations-textare" rows="3" placeholder=""
+                name="recommendation"></textarea>
+        </div>
+        <div class="d-flex justify-content-center mx-auto my-3">
+            <button type="submit" class="btn btn-primary ">Добавить приём</button>
+        </div>
+    </form>
+</div>
 
 {% endblock %}
