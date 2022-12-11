@@ -24,7 +24,7 @@ $(document).ready(function () {
     })
 
     // скрипт вычисляющий текущую дату и вставляющий ее в страницу
-    $(window).on('load', function () {
+    
         // code here
         var d = new Date();
 
@@ -36,17 +36,15 @@ $(document).ready(function () {
             (day < 10 ? '0' : '') + day;
         console.log(output);
         $('#inputDate').attr('value', output)
-    });
+   
 
     // скрипт вычисляющий текущее время и вставляющий его в страницу
-    $(window).on('load', function () {
         var dt = new Date();
         var hours = dt.getHours();
         var minutes = dt.getMinutes();
         var output = (hours < 10 ? '0' : '') + hours + ":" + (minutes < 10 ? '0' : '') + minutes;
         console.log(output)
         $('#inputTime').attr('value', output)
-    });
 
 
 })
