@@ -113,9 +113,12 @@ def logout():
     logout_user()
     return redirect(url_for('alm_library'))
 
-@app.route('/')
+@app.route('/', methods=['POST', 'GET'])
 @login_required
 def alm_library():
+    if request.method == 'POST':
+        # вот тут удаление всех клиентов
+        return redirect(url_for('alm_library', persons = database.get_all_clients()))
     return render_template('alm_library.html', persons = database.get_all_clients())
 
 @app.route('/animals/<int:id>', methods=['POST', 'GET'])
@@ -123,7 +126,7 @@ def alm_library():
 def alm_animals(id):
     if request.method == 'POST':
         # вот тут по id удаляй клиента, т.к. нажата кнопка. Из реквеста брать ничего не надо.
-        return redirect(url_for('alm_library'))
+        return redirect(url_for('alm_library', persons = database.get_all_clients()))
     return render_template('alm_animals.html', animals = database.get_animals(id))
 
 @app.route('/admissions/<int:animal_id>')
