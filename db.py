@@ -31,6 +31,7 @@ class ALM:
         self.set_insert_functions()
         self.set_select_functions()
         self.set_update_function()
+        self.set_delete_function()
 
     def create_db(self):
         query_create = f"""
@@ -278,7 +279,7 @@ class ALM:
         else:
             return f"'{string}'"
 
-    def insert_user(self, phone_number, surname, name, patronymic=''):
+    def insert_client(self, phone_number, surname, name, patronymic=''):
         patronymic = self.processing_null(patronymic)
         query_create = f"""
         BEGIN;
@@ -711,25 +712,59 @@ class ALM:
             clients[i]['receptions_number'] = int(clients[i]['receptions_number'])
         return clients
 
+    def set_delete_function(self):
+        query_create = f"""
+        CREATE OR REPLACE PROCEDURE delete_all_clients()
+        AS $$
+        DELETE FROM client;
+        $$ LANGUAGE SQL;  
+        """
+        self.cursor.execute(query_create)
+
+        query_create = f"""
+        CREATE OR REPLACE PROCEDURE delete_client(check_id integer)
+        AS $$
+        DELETE FROM client WHERE id = check_id;
+        $$ LANGUAGE SQL;  
+        """
+        self.cursor.execute(query_create)
+
+    def delete_all_clients(self):
+        query_create = f"""
+        BEGIN;
+        call delete_all_clients();
+        COMMIT;
+        """
+        self.cursor.execute(query_create)
+
+    def delete_client(self, id):
+        query_create = f"""
+        BEGIN;
+        call delete_client({id});
+        COMMIT;
+        """
+        self.cursor.execute(query_create)
 
 db = ALM("postgres", "123456", "localhost", "5432")
-# print(db.insert_user(9998886600, 'Петров', 'Петр', 'Петрович'))
-# print(db.insert_user(9998886601, 'Иванов', 'Петр', 'Петрович'))
-# print(db.insert_user(9998886605, 'Ивановский', 'Петр', 'Петрович'))
-# print(db.insert_animal(1, 'Тузик', 'male', 3, 'Собака', 'Дворняга', 'Черный'))
-# print(db.insert_animal(2, 'Барсик', 'male', 2, 'Кот', '', 'Рыжий'))
-# print(db.insert_animal(2, 'Рекс', 'male', 1, 'Собака', 'Такса'))
-# print(db.insert_doctor(8005553535, 'Терапевт', 'xxx', 'Мартыненко', 'Владимир', 'Александрович'))
-# print(db.insert_doctor(8005553500, 'Терапевт', 'xxx', 'Сидоров', 'Петр', 'Аркадьевич'))
-# print(db.insert_reception(2, 1, '2022-12-08', '20:30:00'))
-# print(db.insert_reception(1, 2, '2022-12-08', '20:30:00'))
-# print(db.insert_reception(1, 2, '2022-12-08', '20:30:00'))
-# print(db.insert_reception(3, 1, '2022-12-08', '20:30:00'))
-# print(db.get_all_clients())
-# print(db.get_animals(1))
-# print(db.get_animal_receptions(1))
-# print(db.get_reception(4))
-# print(db.get_doctor(8005553500))
-# print(db.get_doctor_receptions(1))
-# print(db.get_by_last_name('Иванов'))
-# print(db.get_doctor_receptions(2))
+print(db.insert_client(9998886600, 'Петров', 'Петр', 'Петрович'))
+print(db.insert_client(9998886601, 'Иванов', 'Петр', 'Петрович'))
+print(db.insert_client(9998886605, 'Ивановский', 'Петр', 'Петрович'))
+print(db.insert_animal(1, 'Тузик', 'male', 3, 'Собака', 'Дворняга', 'Черный'))
+print(db.insert_animal(2, 'Барсик', 'male', 2, 'Кот', '', 'Рыжий'))
+print(db.insert_animal(2, 'Рекс', 'male', 1, 'Собака', 'Такса'))
+print(db.insert_doctor(8005553535, 'Терапевт', 'xxx', 'Мартыненко', 'Владимир', 'Александрович'))
+print(db.insert_doctor(8005553500, 'Терапевт', 'xxx', 'Сидоров', 'Петр', 'Аркадьевич'))
+print(db.insert_reception(2, 1, '2022-12-08', '20:30:00'))
+print(db.insert_reception(1, 2, '2022-12-08', '20:30:00'))
+print(db.insert_reception(1, 2, '2022-12-08', '20:30:00'))
+print(db.insert_reception(3, 1, '2022-12-08', '20:30:00'))
+print(db.get_all_clients())
+print(db.get_animals(1))
+print(db.get_animal_receptions(1))
+print(db.get_reception(4))
+print(db.get_doctor(8005553500))
+print(db.get_doctor_receptions(1))
+print(db.get_by_last_name('Иванов'))
+print(db.get_doctor_receptions(2))
+# db.delete_client(5)
+# db.delete_all_clients()
