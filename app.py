@@ -210,14 +210,20 @@ def super_doctor():
     if request.method == 'POST':
         # УДАЛЕНИЕ ВСЕГО
         pass
-    return render_template('super_profile.html')
+    return render_template('super_profile.html', doctors=database.get_all_doctors())
 
 @app.route('/add_doctor', methods=['POST', 'GET'])
 @login_required
 def add_doctor():
     if request.method == 'POST':
-        # Добавление доктора в  БД
-        pass
+        surname = request.form['surname']
+        name = request.form['name']
+        patronymic = request.form['patronymic']
+        phone = request.form['phone']
+        password = request.form['password']
+        qualification = request.form['qualification']
+        database.insert_doctor(phone, qualification, password, surname, name, patronymic)
+        return redirect(url_for('super_doctor'))
     return render_template('add_doctor.html')
 
 

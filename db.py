@@ -26,7 +26,8 @@ class ALM:
 
         self.create_db()
 
-        self.engine = create_engine(f"postgresql+psycopg2://{self.user}:{self.password}@{self.ip}:{self.port}/{self.dbname}")
+        self.engine = create_engine(
+            f"postgresql+psycopg2://{self.user}:{self.password}@{self.ip}:{self.port}/{self.dbname}")
         self.cursor = self.engine.connect()
 
         self.create_tables()
@@ -635,7 +636,6 @@ class ALM:
         """
         self.cursor.execute(query_create)
 
-
         query_create = """
         CREATE OR REPLACE FUNCTION get_by_last_name(to_find text)
         RETURNS SETOF client
@@ -650,6 +650,15 @@ class ALM:
         RETURNS SETOF client
         AS $$
         SELECT * FROM client WHERE id=check_id;
+        $$ LANGUAGE SQL;
+        """
+        self.cursor.execute(query_create)
+
+        query_create = """
+        CREATE OR REPLACE FUNCTION get_all_doctors()
+        RETURNS SETOF doctor
+        AS $$
+        SELECT * FROM doctor;
         $$ LANGUAGE SQL;
         """
         self.cursor.execute(query_create)
@@ -777,7 +786,7 @@ class ALM:
         receptions = []
         for i, x in enumerate(result):
             data = self.sql_parser(x[0])
-            reception={}
+            reception = {}
             reception['client'] = dict(zip(self.client_field, data[0:6]))
             reception['animal'] = dict(zip(self.animal_field, data[6:15]))
             reception['reception'] = dict(zip(self.reception_field, data[15:24]))
@@ -833,7 +842,19 @@ class ALM:
         """
         self.cursor.execute(query_create)
 
-# db = ALM("postgres", "123456", "localhost", "5432")
+    def get_all_doctors(self):
+        self.check_connection()
+        query_create = f"""
+        SELECT get_all_doctors();
+        """
+        result = self.cursor.execute(query_create)
+        doctor = []
+        for i, x in enumerate(result):
+            data = self.sql_parser(x[0])
+            doctor.append(dict(zip(self.doctor_field, data)))
+        return doctor
+
+db = ALM("postgres", "123456", "localhost", "5432")
 # print(db.insert_client(9998886600, 'Петров', 'Петр', 'Петрович'))
 # print(db.insert_client(9998886601, 'Иванов', 'Петр', 'Петрович'))
 # print(db.insert_client(9998886605, 'Ивановский', 'Петр', 'Петрович'))
@@ -854,3 +875,4 @@ class ALM:
 # print(db.get_doctor_receptions(1))
 # print(db.get_by_last_name('Иванов'))
 # print(db.get_doctor_receptions(2))
+# print(db.get_all_doctors())
