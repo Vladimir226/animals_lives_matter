@@ -135,8 +135,8 @@ def logout():
 @login_required
 def alm_library():
     if request.method == 'POST':
-        # вот тут удаление всех клиентов
-        return redirect(url_for('alm_library', persons=database.get_all_clients()))
+        database.delete_all_clients()
+        return redirect(url_for('alm_library'))
     return render_template('alm_library.html', persons=database.get_all_clients())
 
 
@@ -145,9 +145,10 @@ def alm_library():
 def alm_animals(id):
     if request.method == 'POST':
         # вот тут по id удаляй клиента, т.к. нажата кнопка. Из реквеста брать ничего не надо.
-        return redirect(url_for('alm_library', persons=database.get_all_clients()))
+        database.delete_client(id)
+        return redirect(url_for('alm_library'))
     return render_template('alm_animals.html', animals=database.get_animals(id),
-                           person=database.get_client(id))
+                           person=database.get_client(id), id=id)
 
 
 @app.route('/admissions/<int:animal_id>')
