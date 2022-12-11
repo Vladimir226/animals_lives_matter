@@ -17,13 +17,16 @@ class ALM:
         self.ip = ip
         self.port = port
         self.dbname = dbname
+        self.status = False
+        self.start_connection()
 
-        self.engine = create_engine(f"postgresql+psycopg2://{user}:{password}@{ip}:{port}/postgres")
+    def start_connection(self):
+        self.engine = create_engine(f"postgresql+psycopg2://{self.user}:{self.password}@{self.ip}:{self.port}/postgres")
         self.cursor = self.engine.connect()
 
         self.create_db()
 
-        self.engine = create_engine(f"postgresql+psycopg2://{user}:{password}@{ip}:{port}/{dbname}")
+        self.engine = create_engine(f"postgresql+psycopg2://{self.user}:{self.password}@{self.ip}:{self.port}/{self.dbname}")
         self.cursor = self.engine.connect()
 
         self.create_tables()
@@ -32,6 +35,12 @@ class ALM:
         self.set_select_functions()
         self.set_update_function()
         self.set_delete_function()
+
+        self.status = True
+
+    def check_connection(self):
+        if not self.status:
+            self.start_connection()
 
     def create_db(self):
         query_create = f"""
@@ -280,6 +289,7 @@ class ALM:
             return f"'{string}'"
 
     def insert_client(self, phone_number, surname, name, patronymic=''):
+        self.check_connection()
         patronymic = self.processing_null(patronymic)
         query_create = f"""
         BEGIN;
@@ -289,6 +299,7 @@ class ALM:
         return self.insert_end(result)
 
     def insert_animal(self, owner_id, nickname, gender, age, type, breed='', color=''):
+        self.check_connection()
         breed = self.processing_null(breed)
         color = self.processing_null(color)
         if gender not in ['male', 'female']:
@@ -301,6 +312,7 @@ class ALM:
         return self.insert_end(result)
 
     def insert_doctor(self, phone_number, qualification, password, surname, name, patronymic=''):
+        self.check_connection()
         patronymic = self.processing_null(patronymic)
         query_create = f"""
         BEGIN;
@@ -311,6 +323,7 @@ class ALM:
 
     def insert_reception(self, animal_id, doctor_id, date, time, description='', research='', diagnosis='',
                          recommendations=''):
+        self.check_connection()
         description = self.processing_null(description)
         research = self.processing_null(research)
         diagnosis = self.processing_null(diagnosis)
@@ -603,6 +616,7 @@ class ALM:
         self.cursor.execute(query_create)
 
     def get_client(self, check_id):
+        self.check_connection()
         query_create = f"""
         SELECT get_client({check_id});
         """
@@ -616,6 +630,7 @@ class ALM:
         return clients[0]
 
     def get_all_clients(self):
+        self.check_connection()
         query_create = """
         SELECT get_all_clients();
         """
@@ -629,6 +644,7 @@ class ALM:
         return clients
 
     def get_animals(self, id):
+        self.check_connection()
         query_create = f"""
         SELECT get_animals({id});
         """
@@ -644,6 +660,7 @@ class ALM:
         return animals
 
     def get_animal_receptions(self, id):
+        self.check_connection()
         query_create = f"""
         SELECT get_animal_receptions({id});
         """
@@ -655,6 +672,7 @@ class ALM:
         return receptions
 
     def get_reception(self, id):
+        self.check_connection()
         query_create = f"""
         SELECT get_reception({id});
         """
@@ -669,6 +687,7 @@ class ALM:
         return reception
 
     def get_doctor(self, phone_number):
+        self.check_connection()
         query_create = f"""
         SELECT get_doctor({phone_number});
         """
@@ -699,6 +718,7 @@ class ALM:
         self.cursor.execute(query_create)
 
     def update_doctor_info(self, id, surname, name, patronymic, qualification):
+        self.check_connection()
         query_create = f"""
         BEGIN;
         call update_doctor_info({id}, '{surname}', '{name}', '{patronymic}', '{qualification}');
@@ -707,9 +727,10 @@ class ALM:
         self.cursor.execute(query_create)
 
     def get_doctor_receptions(self, id):
+        self.check_connection()
         query_create = f"""
-                SELECT get_doctor_receptions({id});
-                """
+        SELECT get_doctor_receptions({id});
+        """
         result = self.cursor.execute(query_create)
         receptions = []
         for i, x in enumerate(result):
@@ -722,6 +743,7 @@ class ALM:
         return receptions
 
     def get_by_last_name(self, to_find):
+        self.check_connection()
         query_create = f"""
         SELECT get_by_last_name('{to_find}');
         """
@@ -752,6 +774,7 @@ class ALM:
         self.cursor.execute(query_create)
 
     def delete_all_clients(self):
+        self.check_connection()
         query_create = f"""
         BEGIN;
         call delete_all_clients();
@@ -760,6 +783,7 @@ class ALM:
         self.cursor.execute(query_create)
 
     def delete_client(self, id):
+        self.check_connection()
         query_create = f"""
         BEGIN;
         call delete_client({id});
@@ -767,7 +791,7 @@ class ALM:
         """
         self.cursor.execute(query_create)
 
-db = ALM("postgres", "123456", "localhost", "5432")
+# db = ALM("postgres", "123456", "localhost", "5432")
 # print(db.insert_client(9998886600, 'Петров', 'Петр', 'Петрович'))
 # print(db.insert_client(9998886601, 'Иванов', 'Петр', 'Петрович'))
 # print(db.insert_client(9998886605, 'Ивановский', 'Петр', 'Петрович'))
