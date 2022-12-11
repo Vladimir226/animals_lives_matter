@@ -677,7 +677,9 @@ class ALM:
 
     def update_doctor_info(self, id, surname, name, patronymic, qualification):
         query_create = f"""
-        call update_doctor_info({id}, {surname}, {name}, {patronymic}, {qualification});
+        BEGIN;
+        call update_doctor_info({id}, '{surname}', '{name}', '{patronymic}', '{qualification}');
+        COMMIT;
         """
         self.cursor.execute(query_create)
 

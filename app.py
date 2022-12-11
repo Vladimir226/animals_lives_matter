@@ -80,8 +80,12 @@ import db
 def edit_profile():
     if request.method == 'POST':
         # вот тут данные из формы
-        print(request.form['full-name'])
-        print(request.form['qualification'])
+        id = database.get_doctor(current_user.get_id())['id']
+        surname = request.form['surname']
+        name = request.form['name']
+        patronymic = request.form['patronymic']
+        qualification = request.form['qualification']
+        database.update_doctor_info(id, surname, name, patronymic, qualification)
         return redirect(url_for('profile'))
     return render_template('edit_profile.html', doctor = database.get_doctor(current_user.get_id()))
 
