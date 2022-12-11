@@ -30,6 +30,7 @@ class ALM:
         self.set_triggers()
         self.set_insert_functions()
         self.set_select_functions()
+        self.set_update_function()
 
     def create_db(self):
         query_create = f"""
@@ -85,6 +86,8 @@ class ALM:
         DEFAULT 0
         CHECK(receptions_number>=0)
         );
+        
+        CREATE INDEX IF NOT EXISTS owner_id ON animal(owner_id);
 
         CREATE TABLE IF NOT EXISTS doctor(
         phone_number numeric(10) PRIMARY KEY,
@@ -97,6 +100,7 @@ class ALM:
         password text NOT NULL,
         photo bytea DEFAULT NULL
         );
+        
 
         CREATE TABLE IF NOT EXISTS reception(
         id serial PRIMARY KEY,
@@ -113,6 +117,10 @@ class ALM:
         diagnosis text,
         recommendations text
         );
+        
+        CREATE INDEX IF NOT EXISTS animal_id ON reception(animal_id);
+        CREATE INDEX IF NOT EXISTS doctor_id ON reception(doctor_id);
+        
         $$ LANGUAGE SQL;
         """
         self.cursor.execute(query_create)
@@ -295,7 +303,7 @@ class ALM:
         patronymic = self.processing_null(patronymic)
         query_create = f"""
         BEGIN;
-        SELECT insert_doctor({phone_number}, '{surname}', '{name}', {patronymic}, '{qualification}', '{password}');
+        SELECT insert_doctor({phone_number}, '{surname}', '{name}', {patronymic}, '{qualification}', '{generate_password_hash(password)}');
         """
         result = self.cursor.execute(query_create)
         return self.insert_end(result)
@@ -391,7 +399,7 @@ class ALM:
         CREATE OR REPLACE FUNCTION get_animal_receptions(check_id integer)
         RETURNS SETOF reception
         AS $$
-        SELECT * FROM reception WHERE animal_id=check_id;
+        SELECT * FROM reception WHERE animal_id=check_id ORDER BY id DESC;
         $$ LANGUAGE SQL;        
         """
         self.cursor.execute(query_create)
@@ -507,6 +515,83 @@ class ALM:
         """
         self.cursor.execute(query_create)
 
+        query_create = """
+        CREATE OR REPLACE FUNCTION get_doctor_receptions(check_id integer)
+        RETURNS TABLE (
+        phone_number1 numeric(10),
+        id1 integer,
+        surname1 text,
+        name1 text,
+        patronymic1 text,
+        receptions_number1 integer,
+
+        id2 integer,
+        owner_id2 numeric(10),
+        nickname2 text,
+        gender2 varchar(6),
+        age2 numeric(2),
+        type2 text,
+        breed2 text,
+        color2 text,
+        receptions_number2 integer,
+
+        id3 integer,
+        animal_id3 integer,
+        doctor_id3 integer,
+        date3 date,
+        time3 time,
+        description3 text,
+        research3 text,
+        diagnosis3 text,
+        recommendations3 text
+        )
+        AS $$
+        SELECT 
+
+        client.phone_number,
+        client.id,
+        client.surname,
+        client.name,
+        client.patronymic,
+        client.receptions_number,
+
+        animal.id,
+        animal.owner_id,
+        animal.nickname,
+        animal.gender,
+        animal.age,
+        animal.type,
+        animal.breed,
+        animal.color,
+        animal.receptions_number,
+
+        reception.id,
+        reception.animal_id,
+        reception.doctor_id,
+        reception.date,
+        reception.time,
+        reception.description,
+        reception.research,
+        reception.diagnosis,
+        reception.recommendations
+
+        FROM client JOIN animal on client.id=animal.owner_id JOIN reception on
+        animal.id = reception.animal_id 
+        WHERE reception.doctor_id=check_id ORDER BY reception.id DESC;
+        $$ LANGUAGE SQL;        
+        """
+        self.cursor.execute(query_create)
+
+
+        query_create = """
+        CREATE OR REPLACE FUNCTION get_by_last_name(to_find text)
+        RETURNS SETOF client
+        AS $$
+        SELECT * FROM client WHERE surname LIKE to_find || '%%';
+        $$ LANGUAGE SQL;
+        """
+        self.cursor.execute(query_create)
+
     def get_all_clients(self):
         query_create = """
         SELECT get_all_clients();
@@ -571,21 +656,78 @@ class ALM:
             doctor = dict(zip(self.doctor_field, data))
         return doctor
 
+    def set_update_function(self):
+        query_create = """
+        CREATE OR REPLACE PROCEDURE update_doctor_info(
+        check_id integer,
+        new_surname text,
+        new_name text,
+        new_patronymic text,
+        new_qualification text)
+        AS $$
+        UPDATE doctor SET 
+        surname = new_surname,
+        name = new_name,
+        patronymic = new_patronymic,
+        qualification = new_qualification
+        WHERE id = check_id;
+        $$ LANGUAGE SQL;        
+        """
+        self.cursor.execute(query_create)
 
-# db = ALM("usr", "123456", "localhost", "5432")
+    def update_doctor_info(self, id, surname, name, patronymic, qualification):
+        query_create = f"""
+        call update_doctor_info({id}, {surname}, {name}, {patronymic}, {qualification});
+        """
+        self.cursor.execute(query_create)
+
+    def get_doctor_receptions(self, id):
+        query_create = f"""
+                SELECT get_doctor_receptions({id});
+                """
+        result = self.cursor.execute(query_create)
+        receptions = []
+        for i, x in enumerate(result):
+            data = self.sql_parser(x[0])
+            reception={}
+            reception['client'] = dict(zip(self.client_field, data[0:6]))
+            reception['animal'] = dict(zip(self.animal_field, data[6:15]))
+            reception['reception'] = dict(zip(self.reception_field, data[15:24]))
+            receptions.append(reception)
+        return receptions
+
+    def get_by_last_name(self, to_find):
+        query_create = f"""
+        SELECT get_by_last_name('{to_find}');
+        """
+        result = self.cursor.execute(query_create)
+        clients = []
+        for i, x in enumerate(result):
+            data = self.sql_parser(x[0])
+            clients.append(dict(zip(self.client_field, data)))
+            clients[i]['phone_number'] = int(clients[i]['phone_number'])
+            clients[i]['receptions_number'] = int(clients[i]['receptions_number'])
+        return clients
+
+
+db = ALM("postgres", "123456", "localhost", "5432")
 # print(db.insert_user(9998886600, 'Петров', 'Петр', 'Петрович'))
 # print(db.insert_user(9998886601, 'Иванов', 'Петр', 'Петрович'))
+# print(db.insert_user(9998886605, 'Ивановский', 'Петр', 'Петрович'))
 # print(db.insert_animal(1, 'Тузик', 'male', 3, 'Собака', 'Дворняга', 'Черный'))
 # print(db.insert_animal(2, 'Барсик', 'male', 2, 'Кот', '', 'Рыжий'))
 # print(db.insert_animal(2, 'Рекс', 'male', 1, 'Собака', 'Такса'))
-# print(db.insert_doctor(8005553535, 'Терапевт', generate_password_hash('xxx'), 'Мартыненко', 'Владимир', 'Александрович'))
-# print(db.insert_doctor(8005553500, 'Терапевт', generate_password_hash('xxx'), 'Сидоров', 'Петр', 'Аркадьевич'))
+# print(db.insert_doctor(8005553535, 'Терапевт', 'xxx', 'Мартыненко', 'Владимир', 'Александрович'))
+# print(db.insert_doctor(8005553500, 'Терапевт', 'xxx', 'Сидоров', 'Петр', 'Аркадьевич'))
 # print(db.insert_reception(2, 1, '2022-12-08', '20:30:00'))
 # print(db.insert_reception(1, 2, '2022-12-08', '20:30:00'))
 # print(db.insert_reception(1, 2, '2022-12-08', '20:30:00'))
 # print(db.insert_reception(3, 1, '2022-12-08', '20:30:00'))
 # print(db.get_all_clients())
 # print(db.get_animals(1))
-# print(db.get_animal_receptions(3))
+# print(db.get_animal_receptions(1))
 # print(db.get_reception(4))
 # print(db.get_doctor(8005553500))
+# print(db.get_doctor_receptions(1))
+print(db.get_by_last_name('Иванов'))
+# print(db.get_doctor_receptions(2))

@@ -60,12 +60,14 @@ def before_request():
 @login_required
 def profile():
     # db= get_db()
-    return render_template("profile.html",doctor = database.get_doctor(current_user.get_id()))
+    doc = database.get_doctor(current_user.get_id())
+    return render_template("profile.html", doctor=doc, receptions = database.get_doctor_receptions(doc['id'])[:5])
 
 @app.route('/admissions_history')
 @login_required
 def admissions_history():
-    return render_template("admissions_history.html")
+    doc = database.get_doctor(current_user.get_id())
+    return render_template("admissions_history.html", receptions = database.get_doctor_receptions(doc['id']))
 
 @app.route('/add_admission')
 @login_required
@@ -133,14 +135,15 @@ def search():
     if request.method == 'POST':
         # вот тут надо вызвать селекты и в persons закинуть результат поиска
         searcher = request.form['search']
-        return redirect(url_for('search_result', persons = ...))
+        return redirect(url_for('search_result', searcher = searcher))
 
     return render_template("search.html")
 
 @app.route('/search/result')
 @login_required
 def search_result():
-    return render_template("search_result.html")
+    searcher = request.args['searcher']
+    return render_template("search_result.html", persons = database.get_by_last_name(searcher))
 
 if __name__ =="__main__":
     app.run(debug=True)
