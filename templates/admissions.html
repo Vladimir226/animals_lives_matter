@@ -28,5 +28,12 @@ admissions
         
         </div>
     {% endfor %} 
+
+    <a href="{{url_for('add_admission')}}" class="library-a text-decoration-none text-reset">
+        <div class="btn-plus-reception shadow-sm bg-primary w-25 mx-auto rounded-3 d-flex py-1 my-5">
+            <img src="../static/icons/plus.svg"  class="img-plus-reception">
+            <div class="text-nowrap text-center flex-grow-1 align-self-center text-light">Новый приём</div>
+        </div>
+    </a>
 </div>
 {%endblock%}

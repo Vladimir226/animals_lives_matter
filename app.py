@@ -150,6 +150,24 @@ def search():
     status = request.args['status']
     return render_template("search.html", persons = database.get_by_last_name(searcher), status = status, req = searcher)
 
+
+@app.route('/add_client', methods=['POST', 'GET'])
+@login_required
+def add_client():
+    if request.method == 'POST':
+        # тут написать, что происходит после добавления клиента
+        pass
+    return render_template("add_client.html")
+
+@app.route('/add_animal', methods=['POST', 'GET'])
+@login_required
+def add_animal():
+    if request.method == 'POST':
+        # тут написать, что происходит после добавления животного
+        pass
+
+    return render_template("add_animal.html")
+
 # @app.route('/search/result')
 # @login_required
 # def search_result():

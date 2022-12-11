@@ -27,26 +27,25 @@
     <h3 class="list-title text-center">Последние приёмы</h3>
     <div class="d-flex flex-column">
     {% for reception in receptions %}
+    <a href="" class="library-a text-decoration-none text-reset">
         <div class="h-reception shadow p-3 rounded-3 m-3 ">
-            <div class="h-reception-container d-flex align-items-center">
-                <div class="h-reception-img rounded-2"></div>
-                <div class="h-reception-info  ms-3 p-2 border border-2 rounded-2 flex-grow-1 ">
-                    <ul class="h-reception-ul ">
-                        <li class="reception-number"> <h6 class="d-inline">Номер приема:</h6> <div class="text d-inline">{{ reception.reception.id }}</div></li>
-                        <li class="name"> <h6 class="d-inline">ФИО клиента:</h6> <div class="text d-inline">
-                            {{ reception.client.surname }} {{ reception.client.name }} {{ reception.client.patronymic }}</div></li>
-                        <li class="phone"> <h6 class="d-inline">Номер телефона клиента:</h6> <div class="text d-inline">+7{{ reception.client.phone_number }}</div></li>
-                        <li class="creature"> <h6 class="d-inline">Вид животного:</h6> <div class="text d-inline">{{ reception.animal.type }}</div></li>
-                        <li class="gender"><h6 class="d-inline">Пол животного:</h6> <div class="text d-inline">{{ reception.animal.gender }}</div></li>
-                        <li class="purpose"><h6 class="d-inline">Диагноз: </h6> <div class="text d-inline">{{ reception.reception.diagnosis }}</div></li>
-                        <li class="date"> <h6 class="d-inline">Дата:</h6> <div class="text d-inline">{{ reception.reception.date }}</div></li>
-                    </ul>
+                <div class="h-reception-container d-flex align-items-center">
+                    <div class="h-reception-img rounded-2"></div>
+                    <div class="h-reception-info  ms-3 p-2 border border-2 rounded-2 flex-grow-1 ">
+                        <ul class="h-reception-ul ">
+                            <li class="reception-number"> <h6 class="d-inline">Номер приема:</h6> <div class="text d-inline">{{ reception.reception.id }}</div></li>
+                            <li class="name"> <h6 class="d-inline">ФИО клиента:</h6> <div class="text d-inline">
+                                {{ reception.client.surname }} {{ reception.client.name }} {{ reception.client.patronymic }}</div></li>
+                            <li class="phone"> <h6 class="d-inline">Номер телефона клиента:</h6> <div class="text d-inline">+7{{ reception.client.phone_number }}</div></li>
+                            <li class="creature"> <h6 class="d-inline">Вид животного:</h6> <div class="text d-inline">{{ reception.animal.type }}</div></li>
+                            <li class="gender"><h6 class="d-inline">Пол животного:</h6> <div class="text d-inline">{{ reception.animal.gender }}</div></li>
+                            <li class="purpose"><h6 class="d-inline">Диагноз: </h6> <div class="text d-inline">{{ reception.reception.diagnosis }}</div></li>
+                            <li class="date"> <h6 class="d-inline">Дата:</h6> <div class="text d-inline">{{ reception.reception.date }}</div></li>
+                        </ul>
+                    </div>
                 </div>
-                <div class=" btn-h-about bg-secondary bg-gradient align-self-stretch">
-                    <div class="label-about vertical-text"> <a href="{{url_for('admission',reception_id = reception.reception.id)}}"> Подробнее</a></div>
-                </div>
-            </div>
         </div>
+    </a>
     {% endfor %}
     </div>
 </div>
