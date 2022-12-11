@@ -13,7 +13,6 @@ library
 
     <div class="library-header-btn d-flex justify-content-between mx-3">
         <button type="button" class="btn btn-primary"><a href="{{url_for('search', searcher='', status='start')}}">Поиск</a></button>
-        <button type="button" class="btn btn-warning">Удалить все записи</button>
     </div>
     
     {% for person in persons %}
@@ -28,13 +27,6 @@ library
                                 <li class="receptions_number"> <h6 class="d-inline">Количество посещений:</h6> <div class="text d-inline">{{person.receptions_number}}</div></li>
                             </ul>
                         </div>
-                        <object type="owo/uwu" class="align-self-stretch object">
-                            <a href="{{url_for('profile')}}">
-                                <div class=" btn-l-delete bg-warning h-100 border-2 rounded-2">
-                                        <div class="vertical-text">Удалить</div>
-                                </div>
-                            </a>
-                        </object>
                     </div>
                 </div>
             </a>
