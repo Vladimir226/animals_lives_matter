@@ -203,6 +203,22 @@ def add_animal(client_id):
 
     return render_template("add_animal.html", client_id=client_id)
 
+@app.route('/super_doctor', methods=['POST', 'GET'])
+@login_required
+def super_doctor():
+    if request.method == 'POST':
+        # УДАЛЕНИЕ ВСЕГО
+        pass
+    return render_template('super_profile.html')
+
+@app.route('/add_doctor', methods=['POST', 'GET'])
+@login_required
+def add_doctor():
+    if request.method == 'POST':
+        # Добавление доктора в  БД
+        pass
+    return render_template('add_doctor.html')
+
 
 # @app.route('/search/result')
 # @login_required

@@ -124,3 +124,26 @@ ul{
  {
      color: white;
  }
+ .btn-red-bigest
+ {
+     width: 200px;
+     height: 200px;
+
+     border-radius: 1000px;
+     border: 5px solid rgb(92, 92, 92);
+     background: radial-gradient(red, rgb(123, 10, 10));
+
+     color: white;
+     font-weight: 700;
+     font-size: 30px;
+ }
+ /* .btn-red-bigest-container
+ {
+
+     max-width: 300px;
+ } */
+ .owners_text
+ {
+     font-weight: 700;
+     font-size: 15px;
+ }
