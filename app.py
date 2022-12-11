@@ -135,15 +135,16 @@ def search():
     if request.method == 'POST':
         # вот тут надо вызвать селекты и в persons закинуть результат поиска
         searcher = request.form['search']
-        return redirect(url_for('search_result', searcher = searcher))
-
-    return render_template("search.html")
-
-@app.route('/search/result')
-@login_required
-def search_result():
+        return redirect(url_for('search', searcher = searcher, status='progress'))
     searcher = request.args['searcher']
-    return render_template("search_result.html", persons = database.get_by_last_name(searcher))
+    status = request.args['status']
+    return render_template("search.html", persons = database.get_by_last_name(searcher), status = status, req = searcher)
+
+# @app.route('/search/result')
+# @login_required
+# def search_result():
+#     searcher = request.args['searcher']
+#     return render_template("search_result.html", persons = database.get_by_last_name(searcher))
 
 if __name__ =="__main__":
     app.run(debug=True)
