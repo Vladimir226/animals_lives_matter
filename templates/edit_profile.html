@@ -19,15 +19,29 @@ edit-profile
             <div class="edit-info flex-grow-1">
                 <div class="row">
                     <div class="col-8">
-                        <label for="fullname-edit-profile">ФИО:</label>
-                        <input name="full-name" type="text" value="{{doctor.surname}} {{ doctor.name }} {{ doctor.patronymic }}" class="form-control" id="fullname-edit-profile" aria-describedby="fullname-edit-profile" placeholder="Введите ФИО">
-                        <small id="fullname-edit-profile" class="form-text text-muted">Например: Афанасьев Афанасий Афанасьевич</small>
+                        <label for="surname-edit-profile">Фамилия:</label>
+                        <input name="surname" type="text" value="{{doctor.surname}}" class="form-control" id="surname-edit-profile" aria-describedby="surname-edit-profile" placeholder="Введите Фамилию">
+                        <small id="surname-edit-profile" class="form-text text-muted">Например: Афанасьев</small>
                     </div>
     {#                <div class="col-4">#}
     {#                    <label for="phone-edit-profile">Номер телефона</label>#}
     {#                    <input type="text"  value="" class="form-control" id="phone-edit-profile" aria-describedby="phone-edit-profile" placeholder="введите номер телефона">#}
     {#                    <small id="phone-edit-profile" class="form-text text-muted">Например: +79999999999</small>#}
     {#                </div>#}
+                </div>
+                <div class="row">
+                    <div class="col-8">
+                        <label for="fullname-edit-profile">Имя:</label>
+                        <input name="name" type="text" value="{{ doctor.name }}" class="form-control" id="name-edit-profile" aria-describedby="name-edit-profile" placeholder="Введите имя">
+                        <small id="name-edit-profile" class="form-text text-muted">Например:Афанасий</small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-8">
+                        <label for="fullname-edit-profile">Отчество:</label>
+                        <input name="patronymic" type="text" value="{{ doctor.patronymic }}" class="form-control" id="patronymic-edit-profile" aria-describedby="patronymic-edit-profile" placeholder="Введите отчетсво">
+                        <small id="patronymic-edit-profile" class="form-text text-muted">Например: Афанасьевич</small>
+                    </div>
                 </div>
                 
                 <div class="row">
