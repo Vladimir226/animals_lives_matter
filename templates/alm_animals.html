@@ -7,6 +7,13 @@ library animals
 {%block body%}
 <div class="list-receptions mt-5">
     <h3 class="list-title text-center">Животные</h3>
+    <div class="animals-header d-flex justify-content-between mx-3">
+        <div class="animals-owner">
+            <!-- вставь сюда ФИО владельца -->
+            <h6 class="d-inline">ФИО владельца:</h6> <div class="text d-inline"></div>
+        </div>
+        <button type="button" class="btn btn-warning">Удалить клиента</button>
+    </div>
     {% for animal in animals %}
         <div class="d-flex flex-column">
             <a href="{{url_for('admissions',animal_id=animal.id)}}" class="library-a text-decoration-none text-reset">
