@@ -6,14 +6,20 @@ library animals
 
 {%block body%}
 <div class="list-receptions mt-5">
-    <h3 class="list-title text-center">Животные</h3>
-    <div class="animals-header d-flex justify-content-between mx-3">
+    <div class="animals-header m-3 mb-5 shadow p-3 rounded-3 ">
+        <div class="client-header d-flex justify-content-between flex-wrap mb-3">
+            <h3 class="list-title text-center">Информация о клиенте</h3>
+            <form action="/alm_animals" method="post">
+                <button type="submit" class="btn btn-warning"><a href=""></a> Удалить клиента</button>
+            </form>
+        </div>
         <div class="animals-owner">
             <!-- вставь сюда ФИО владельца -->
-            <h6 class="d-inline">ФИО владельца:</h6> <div class="text d-inline"></div>
+            <h6>ФИО: Мартыненко Владимир Александрович</h6> 
+            <h6>Номер телефона: +79991382501</h6> 
         </div>
-        <button type="button" class="btn btn-warning">Удалить клиента</button>
     </div>
+    <h3 class="list-title text-center">Животные</h3>
     {% for animal in animals %}
         <div class="d-flex flex-column">
             <a href="{{url_for('admissions',animal_id=animal.id)}}" class="library-a text-decoration-none text-reset">
