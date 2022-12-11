@@ -411,9 +411,48 @@ class ALM:
 
         query_create = """
         CREATE OR REPLACE FUNCTION get_animal_receptions(check_id integer)
-        RETURNS SETOF reception
+        RETURNS TABLE(
+        id3 integer,
+        animal_id3 integer,
+        doctor_id3 integer,
+        date3 date,
+        time3 time,
+        description3 text,
+        research3 text,
+        diagnosis3 text,
+        recommendations3 text,
+        
+        phone_number4 numeric(10),
+        id4 integer,
+        surname4 text,
+        name4 text,
+        patronymic4 text,
+        qualification4 text,
+        receptions_number4 integer
+        )
         AS $$
-        SELECT * FROM reception WHERE animal_id=check_id ORDER BY id DESC;
+        SELECT 
+        
+        reception.id,
+        reception.animal_id,
+        reception.doctor_id,
+        reception.date,
+        reception.time,
+        reception.description,
+        reception.research,
+        reception.diagnosis,
+        reception.recommendations,
+        
+        doctor.phone_number,
+        doctor.id,
+        doctor.surname,
+        doctor.name,
+        doctor.patronymic,
+        doctor.qualification,
+        doctor.receptions_number
+         
+        FROM reception JOIN doctor ON reception.doctor_id = doctor.id 
+        WHERE reception.animal_id=check_id ORDER BY reception.id DESC;
         $$ LANGUAGE SQL;        
         """
         self.cursor.execute(query_create)
@@ -668,7 +707,10 @@ class ALM:
         receptions = []
         for i, x in enumerate(result):
             data = self.sql_parser(x[0])
-            receptions.append(dict(zip(self.reception_field, data)))
+            reception = {}
+            reception['reception'] = dict(zip(self.reception_field, data[0:9]))
+            reception['doctor'] = dict(zip(self.doctor_field, data[9:16]))
+            receptions.append(reception)
         return receptions
 
     def get_reception(self, id):
@@ -806,12 +848,9 @@ class ALM:
 # print(db.insert_reception(3, 1, '2022-12-08', '20:30:00'))
 # print(db.get_all_clients())
 # print(db.get_animals(1))
-# print(db.get_animal_receptions(1))
-# print(db.get_reception(4))
+# print(db.get_animal_receptions(2))
+# print(db.get_reception(3))
 # print(db.get_doctor(8005553500))
 # print(db.get_doctor_receptions(1))
 # print(db.get_by_last_name('Иванов'))
 # print(db.get_doctor_receptions(2))
-# db.delete_client(5)
-# db.delete_all_clients()
-# print(db.get_client(3))

@@ -27,7 +27,7 @@
     <h3 class="list-title text-center">Последние приёмы</h3>
     <div class="d-flex flex-column">
     {% for reception in receptions %}
-    <a href="" class="library-a text-decoration-none text-reset">
+    <a href="/admission/{{reception.reception.id}}" class="library-a text-decoration-none text-reset">
         <div class="h-reception shadow p-3 rounded-3 m-3 ">
                 <div class="h-reception-container d-flex align-items-center">
                     <div class="h-reception-img rounded-2"></div>

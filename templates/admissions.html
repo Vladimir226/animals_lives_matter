@@ -10,16 +10,17 @@ admissions
 
     {% for reception in receptions %}
         <div class="d-flex flex-column">
-            <a href="{{url_for('admission',reception_id = reception.id)}}" class="library-a text-decoration-none text-reset">
+            <a href="{{url_for('admission',reception_id = reception.reception.id)}}" class="library-a text-decoration-none text-reset">
                 <div class="h-reception shadow p-3 rounded-3 m-3 ">
                     <div class="h-reception-container d-flex align-items-center">
                         <div class="h-reception-img rounded-2"></div>
                         <div class="h-reception-info   p-2 border border-2 rounded-2 flex-grow-1  ms-2">
                             <ul class="h-reception-ul ">
-                                <li class="number-admission"> <h6 class="d-inline">Номер приёма:</h6> <div class="text d-inline">{{reception.id}}</div></li>
-                                <li class="date-admission"> <h6 class="d-inline">Дата приема:</h6> <div class="text d-inline">{{reception.date}}</div></li>
-                                <li class="doctor-admission"> <h6 class="d-inline">Ветврач:</h6> <div class="text d-inline"></div></li>
-                                <li class="diagnosis-admission"> <h6 class="d-inline">Диагноз:</h6> <div class="text d-inline">{{reception.diagnosis}}</div></li>
+                                <li class="number-admission"> <h6 class="d-inline">Номер приема:</h6> <div class="text d-inline">{{reception.reception.id}}</div></li>
+                                <li class="date-admission"> <h6 class="d-inline">Дата приема:</h6> <div class="text d-inline">{{reception.reception.date}}</div></li>
+                                <li class="date-admission"> <h6 class="d-inline">Время приема:</h6> <div class="text d-inline">{{reception.reception.time}}</div></li>
+                                <li class="doctor-admission"> <h6 class="d-inline">Ветврач:</h6> <div class="text d-inline">{{ reception.doctor.surname}} {{ reception.doctor.name }} {{ reception.doctor.patronymic }}</div></li>
+                                <li class="diagnosis-admission"> <h6 class="d-inline">Диагноз:</h6> <div class="text d-inline">{{reception.reception.diagnosis}}</div></li>
                             </ul>
                         </div>
                     </div>

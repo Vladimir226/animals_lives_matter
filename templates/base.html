@@ -21,9 +21,9 @@
             </a>
             <span class="fs-4">Animals Lives Matter</span>
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-              <li><a href="{{url_for('alm_library')}}" class="nav-link px-2 text-secondary">file cabinet</a></li>
-              <li><a href="{{url_for('profile')}}" class="nav-link px-2 text-secondary">profile</a></li>
-              <li><a href="{{url_for('admissions_history')}}" class="nav-link px-2 text-secondary">admissions</a></li>
+              <li><a href="{{url_for('alm_library')}}" class="nav-link px-2 text-secondary">Картотека</a></li>
+              <li><a href="{{url_for('profile')}}" class="nav-link px-2 text-secondary">Профиль</a></li>
+              <li><a href="{{url_for('admissions_history')}}" class="nav-link px-2 text-secondary">Приемы</a></li>
             </ul>
     
             <!-- <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
@@ -32,9 +32,9 @@
     
             <div class="text-end">
               {%if g.auth %}
-              <button type="button" class="btn btn-outline-light me-2"><a href="{{url_for('logout')}}">Logout</a></button>
-              {% else %}
-              <button type="button" class="btn btn-outline-light me-2"><a href="{{ url_for('login') }}">Login</a></button>
+              <button type="button" class="btn btn-outline-light me-2"><a href="{{url_for('logout')}}">Выйти</a></button>
+{#              {% else %}#}
+{#              <button type="button" class="btn btn-outline-light me-2"><a href="{{ url_for('login') }}">Войти</a></button>#}
               {% endif %}
               <!-- <button type="button" class="btn btn-warning">Sign-up</button> -->
             </div>
