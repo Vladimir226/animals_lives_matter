@@ -41,7 +41,9 @@ $(document).ready(function () {
     // скрипт вычисляющий текущее время и вставляющий его в страницу
     $(window).on('load', function () {
         var dt = new Date();
-        var output = dt.getHours() + ":" + dt.getMinutes();
+        var hours = dt.getHours();
+        var minutes = dt.getMinutes();
+        var output = (hours < 10 ? '0' : '') + hours + ":" + (minutes < 10 ? '0' : '') + minutes;
         console.log(output)
         $('#inputTime').attr('value', output)
     });
