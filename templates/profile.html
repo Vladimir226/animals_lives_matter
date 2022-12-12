@@ -8,11 +8,11 @@
 <div class="profile p-3 mt-5 shadow-lg rounded-3">
     <div class="profile-header d-flex justify-content-between mb-2">
         <h3 class="profile-title">Личная информация</h3>
-        <button type="button" class="btn btn-secondary profile-btn-edit align-self-start"> <a href="{{url_for('edit_profile')}}">Изменить</a> </button>
+        <a href="{{url_for('edit_profile')}}" class="btn btn-warning profile-btn-edit align-self-start">Изменить</a>
     </div>
 
     <div class="profile-container d-flex bg-light bg-gradient">
-        <div class="profile-img rounded-2"></div>
+        <div class="profile-img rounded-2"><img src="../static/icons/noavatar.jpeg" class="img-avatar" alt=""></div>
         <div class="profile-info ms-3 p-2 border border-2 rounded-2 flex-grow-1">
             <ul class="profile-ul">
                 <li class="full-name"> <h6 class="d-inline">ФИО:</h6> <div class="text d-inline">{{doctor.surname}} {{doctor.name}} {{doctor.patronymic}}</div></li>
@@ -50,9 +50,5 @@
     </div>
 </div>
 
-{#<div class="btn-plus-reception shadow-sm bg-secondary bg-gradient">#}
-{#    <img src="../static/icons/plus.svg"  class="img-plus-reception">#}
-{#    <div class="label-plus-reception"> <a href="{{url_for('add_admission')}}">Добавить приём</a></div>#}
-{#</div>#}
 
 {%endblock%}

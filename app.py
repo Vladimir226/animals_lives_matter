@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, g, redirect, url_for, flash
+from flask import Flask, render_template, request, g, redirect, url_for, flash,send_from_directory
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from werkzeug.utils import secure_filename
 import os
 import sqlite3
 
@@ -9,12 +10,16 @@ from db import *
 from UserLogin import UserLogin
 
 # configurate
+UPLOAD_FOLDER = '/path/to/the/uploads'
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 DATABASE = '/tmp/app.db'
 DEBUG = True
 SECRET_KEY = 'vovan'
 
 app = Flask(__name__)
 app.config.from_object(__name__)
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 app.config.update(dict(DATABASE=os.path.join(app.root_path, 'app.db')))
 
@@ -116,10 +121,34 @@ def add_admission(animal_id):
     return render_template('add_admission.html', animal_id=animal_id)
 
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+
+
 @app.route('/edit_profile', methods=['POST', 'GET'])
 @login_required
 def edit_profile():
     if request.method == 'POST':
+
+        # загрузка изображения
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename)
+            return redirect(url_for('profile'))
+        else:
+            flash('Что-то пошло не так')
+
         # вот тут данные из формы
         id = database.get_doctor(current_user.get_id())['id']
         surname = request.form['surname']
@@ -145,8 +174,8 @@ def login():
             userlogin = UserLogin().create(user, database.session_id)
             login_user(userlogin)
             return redirect(url_for('profile'))
-
-    flash('Неверная пара логин/пароль', 'error')
+        else:
+            flash('Неверная пара логин/пароль', category = 'error')
     return render_template('login.html', title='Авторизация')
 
 
@@ -253,6 +282,9 @@ def add_doctor():
         return redirect(url_for('super_doctor'))
     return render_template('add_doctor.html')
 
+@app.errorhandler(404)
+def not_found_error(error):
+    return redirect('https://www.youtube.com/watch?v=wxQV4rP-mJY#t=00m30s')
 
 # @app.route('/search/result')
 # @login_required

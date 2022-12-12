@@ -8,10 +8,16 @@ a{
     width: 200px;
     height: 200px;
 
-    min-width: 200px;
-
     background-color: rgb(102, 124, 213);
+    border: 3px solid rgb(45, 45, 45);
+    border-radius: 10px;
 
+}
+.profile-img img
+{
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
 }
 ul{
 
