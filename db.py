@@ -887,3 +887,4 @@ class ALM:
 
         self.cursor.close()
         self.engine.dispose()
+        self.status = False
