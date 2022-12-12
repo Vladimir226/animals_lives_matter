@@ -235,7 +235,8 @@ def super_doctor():
     if request.method == 'POST':
         # database.delete_database()
         # logout_user()
-        return redirect(url_for('/profile'))
+        print('hello!')
+        return redirect(url_for('profile'))
     return render_template('super_profile.html', doctors=database.get_all_doctors())
 
 @app.route('/add_doctor', methods=['POST', 'GET'])
