@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, g, redirect, url_for, flash,send_from_directory
+from flask import Flask, render_template, request, g, redirect, url_for, flash, send_from_directory
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
 import os
@@ -42,11 +42,11 @@ if flag:
     database.insert_reception(1, 2, '2022-12-08', '20:30:00')
     database.insert_reception(1, 2, '2022-12-08', '20:30:00')
 
-
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
-#парсер номера телефона
+
+# парсер номера телефона
 def phone_parser(phone):
     phone = phone[2:].replace('(', "")
     phone = phone.replace(')', "")
@@ -89,6 +89,7 @@ def before_request():
             logout_user()
             return redirect(url_for('profile'))
 
+
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
@@ -107,9 +108,7 @@ def admissions_history():
 @app.route('/add_admission/<int:animal_id>', methods=['POST', 'GET'])
 @login_required
 def add_admission(animal_id):
-
     if request.method == 'POST':
-
         date = request.form['date']
         time = request.form.get('clock')
         description = request.form['description']
@@ -126,7 +125,6 @@ def add_admission(animal_id):
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
-
 
 
 @app.route('/edit_profile', methods=['POST', 'GET'])
@@ -146,7 +144,7 @@ def edit_profile():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             send_from_directory(app.config['UPLOAD_FOLDER'],
-                               filename)
+                                filename)
             return redirect(url_for('profile'))
         else:
             flash('Что-то пошло не так')
@@ -177,7 +175,7 @@ def login():
             login_user(userlogin)
             return redirect(url_for('profile'))
         else:
-            flash('Неверная пара логин/пароль', category = 'error')
+            flash('Неверная пара логин/пароль', category='error')
     return render_template('login.html', title='Авторизация')
 
 
@@ -216,7 +214,6 @@ def admissions(animal_id):
 @app.route('/admission/<int:reception_id>')
 @login_required
 def admission(reception_id):
-
     return render_template("admission.html", info=database.get_reception(reception_id))
 
 
@@ -260,18 +257,24 @@ def add_animal(client_id):
 
     return render_template("add_animal.html", client_id=client_id)
 
+
 @app.route('/super_doctor', methods=['POST', 'GET'])
 @login_required
 def super_doctor():
+    if current_user.get_id() != '0':
+        return redirect(url_for('alm_library'))
     if request.method == 'POST':
         database.delete_database()
         logout_user()
         return redirect(url_for('profile'))
     return render_template('super_profile.html', doctors=database.get_all_doctors())
 
+
 @app.route('/add_doctor', methods=['POST', 'GET'])
 @login_required
 def add_doctor():
+    if current_user.get_id() != '0':
+        return redirect(url_for('alm_library'))
     if request.method == 'POST':
         surname = request.form['surname']
         name = request.form['name']
@@ -283,9 +286,11 @@ def add_doctor():
         return redirect(url_for('super_doctor'))
     return render_template('add_doctor.html')
 
+
 @app.errorhandler(404)
 def not_found_error(error):
     return redirect('https://youtu.be/wxQV4rP-mJY?t=215')
+
 
 if __name__ == "__main__":
     app.run(debug=False)
