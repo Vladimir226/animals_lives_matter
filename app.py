@@ -36,15 +36,6 @@ if flag:
     database.insert_reception(2, 1, '2022-12-08', '20:30:00')
     database.insert_reception(1, 2, '2022-12-08', '20:30:00')
     database.insert_reception(1, 2, '2022-12-08', '20:30:00')
-    database.get_all_clients()
-    database.get_animals(1)
-    database.get_animal_receptions(2)
-    database.get_reception(3)
-    database.get_doctor(8005553500)
-    database.get_doctor_receptions(1)
-    database.get_by_last_name('Иванов')
-    database.get_doctor_receptions(2)
-    database.get_all_doctors()
 
 
 login_manager = LoginManager(app)
