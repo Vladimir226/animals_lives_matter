@@ -7,7 +7,7 @@ add_doctor
 {%block body%}
 <div class="edit-profile p-3 mt-5 shadow-lg rounded-3">
     <h3 class="edit-profile-title text-center mb-5">Добавление доктора</h3>
-    <form action="/add_doctor" class="mx-auto" method="POST">
+    <form action="/add_doctor" class="mx-auto form-request" method="POST">
         <div class="edit-profile-container d-flex">
             <div class="edit-avatar">
                 <div class="profile-img rounded-2 mb-3"></div>
@@ -20,14 +20,19 @@ add_doctor
                 <div class="row">
                     <div class="col-4">
                         <label for="phone-add-doctor">Номер телефона:</label>
-                        <input type="numeric" name="phone" class="form-control" id="phone-add-doctor"
-                            aria-describedby="phone-add-doctor" placeholder="введите номер телефона">
+                        <input type="numeric" name="phone" class="form-control phone-field" id="phone-add-doctor"
+                            aria-describedby="phone-add-doctor" 
+                            placeholder="введите номер телефона required" minlength="10" required="true" >
                         <small id="phone-add-doctor" class="form-text text-muted">Например: +79999999999</small>
                     </div><div class="col-4">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
                         <label for="phone-add-doctor">Пароль:</label>
-                        <input type="password" name="password" class="form-control" id="phone-add-doctor"
-                            aria-describedby="phone-add-doctor" placeholder="введите пароль">
-                        <small id="phone-add-doctor" class="form-text text-muted">Например: ********</small>
+                        <input type="password" name="password" class="form-control password-valid password" id="phone-add-doctor"
+                            aria-describedby="phone-add-doctor" placeholder="введите пароль" minlength="6" required>
+                        <small id="phone-add-doctor" class="form-text text-muted">Например: ******</small>
                     </div>
                 </div>
                 <div class="row">
@@ -35,7 +40,7 @@ add_doctor
                         <label for="surname-add-doctor">Фамилия: </label>
                         <input name="surname" type="text"  class="form-control"
                             id="surname-add-doctor" aria-describedby="surname-add-doctor"
-                            placeholder="Введите фамилию">
+                            placeholder="Введите фамилию" required>
                         <small id="surname-add-doctor" class="form-text text-muted">Например: Иванов</small>
                     </div>
                 </div>
@@ -43,7 +48,7 @@ add_doctor
                     <div class="col-8">
                         <label for="name-add-doctor">Имя: </label>
                         <input name="name" type="text"  class="form-control"
-                            id="name-add-doctor" aria-describedby="name-add-doctor" placeholder="Введите имя">
+                            id="name-add-doctor" aria-describedby="name-add-doctor" placeholder="Введите имя" required>
                         <small id="name-add-doctor" class="form-text text-muted">Например: Иван</small>
                     </div>
                 </div>
@@ -62,7 +67,7 @@ add_doctor
                         <label for="specialization-add-doctor">Специальность:</label>
                         <input name="qualification" type="text"  class="form-control"
                             id="specialization-add-doctor" aria-describedby="specialization-add-doctor"
-                            placeholder="Введите свою специальность">
+                            placeholder="Введите свою специальность" required>
                         <small id="specialization-v" class="form-text text-muted">Например: Терапевт</small>
                     </div>
                 </div>
@@ -70,7 +75,7 @@ add_doctor
                 {# <div class="form-group mb-5">#}
                     {# <label for="about-edit-profile">О себе</label>#}
                     {# <textarea class="form-control" id="about-edit-profile" rows="5"
-                        placeholder="Расскажите о себе"></textarea>#}
+                        placeholder="Расскажите о себе" required></textarea>#}
                     {# </div>#}
             </div>
         </div>
@@ -80,4 +85,9 @@ add_doctor
     </form>
 
 </div>
+
+{% block javascript %}
+<script type="text/javascript" src="../static/phone_valid.js"></script>
+{%endblock%}
+
 {%endblock%}

@@ -41,6 +41,13 @@ if flag:
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
+#парсер номера телефона
+def phone_parser(phone):
+    phone = phone[2:].replace('(', "")
+    phone = phone.replace(')', "")
+    phone = phone.replace('-', "")
+    return phone
+
 
 # login_manager.login_message = 'Авторизуйтесь для доступа к закрытым сессия'
 # login_manager.login_message_category = 'success'
@@ -93,11 +100,9 @@ def admissions_history():
 @app.route('/add_admission/<int:animal_id>', methods=['POST', 'GET'])
 @login_required
 def add_admission(animal_id):
-    print('WTFWTFWTFWTFWTFWTFWTWF')
+    
     if request.method == 'POST':
-        print('lllfgfffffffffffffffffffffffffffffffffflol')
-        print(request.form['date'])
-        print(request.form.get('clock'))
+        
         date = request.form['date']
         time = request.form.get('clock')
         description = request.form['description']
@@ -203,7 +208,7 @@ def add_client():
         surname = request.form['surname']
         name = request.form['name']
         patronymic = request.form['patronymic']
-        phone = request.form['phone']
+        phone = phone_parser(request.form['phone'])
         database.insert_client(phone, surname, name, patronymic)
         return redirect(url_for('alm_library'))
     return render_template("add_client.html")
@@ -240,7 +245,7 @@ def add_doctor():
         surname = request.form['surname']
         name = request.form['name']
         patronymic = request.form['patronymic']
-        phone = request.form['phone']
+        phone = phone_parser(request.form['phone'])
         password = request.form['password']
         qualification = request.form['qualification']
         database.insert_doctor(phone, qualification, password, surname, name, patronymic)

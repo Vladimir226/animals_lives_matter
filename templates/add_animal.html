@@ -9,26 +9,28 @@ add_animal
 
 <div class="p-3 my-5 shadow-lg rounded-3">
     <h3 class="edit-profile-title text-center mb-5">Добавление животного</h3> 
-    <form action="/add_animal/{{ client_id }}" class="mx-auto" method="POST">
+    <form action="/add_animal/{{ client_id }}" class="mx-auto form-request" method="POST">
         <div class="add-animal-container mx-auto">
             <div class="edit-info flex-grow-1">
                 <div class="row">
                     <div class="col-6">
                         <label for="add-type-animal">Вид: </label>
-                        <input name="type" type="text"  class="form-control" id="add-type-animal" aria-describedby="help-add-type-animal" placeholder="Введите вид">
+                        <input name="type" type="text"  class="form-control" id="add-type-animal"
+                         aria-describedby="help-add-type-animal" placeholder="Введите вид" required>
                         <small id="help-add-type-animal" class="form-text text-muted">Например: Собака</small>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-8">
                         <label for="add-name-animal">Кличка: </label>
-                        <input name="nickname" type="text"  class="form-control" id="add-name-animal" aria-describedby="help-add-name-animal" placeholder="Введите кличку">
+                        <input name="nickname" type="text"  class="form-control" id="add-name-animal"
+                         aria-describedby="help-add-name-animal" placeholder="Введите кличку" required>
                         <small id="help-add-name-animal" class="form-text text-muted">Например: Тузик</small>
                     </div>
                     <div class="col-4">
                         <label for="type-zoo">Пол: </label>
-                        <select name="gender" class="form-control">
-                            <option>не выбрано</option>
+                        <select name="gender" class="form-control" required>
+                            <option disabled selected value> -- Выберете пол-- </option>
                             <option>male</option>
                             <option>female</option>
                         </select>
@@ -37,17 +39,20 @@ add_animal
                 <div class="row">
                     <div class="col-4">
                         <label for="age-add-animal">Возраст:</label>
-                        <input name="age" type="number" class="form-control" id="age-add-animal" aria-describedby="help-age-add-animal" placeholder="Введите возраст">
+                        <input name="age" type="number" class="form-control" id="age-add-animal"
+                         aria-describedby="help-age-add-animal" placeholder="Введите возраст" required>
                         <small id="help-age-add-animal" class="form-text text-muted">Например: 5 (лет)</small>
                     </div>
                     <div class="col-4">
                         <label for="breed-add-animal">Порода:</label>
-                        <input name="breed" type="text" class="form-control" id="breed-add-animal" aria-describedby="help-breed-add-animal" placeholder="Введите породу">
+                        <input name="breed" type="text" class="form-control" id="breed-add-animal"
+                         aria-describedby="help-breed-add-animal" placeholder="Введите породу">
                         <small id="help-breed-add-animal" class="form-text text-muted">Например: Дворняжка</small>
                     </div>
                     <div class="col-4">
                         <label for="color-add-animal">Окрас:</label>
-                        <input name="color" type="text" class="form-control" id="color-add-animal" aria-describedby="help-color-add-animal" placeholder="Введите окрас">
+                        <input name="color" type="text" class="form-control" id="color-add-animal"
+                         aria-describedby="help-color-add-animal" placeholder="Введите окрас">
                         <small id="help-color-add-animal" class="form-text text-muted">Например: Коричневый</small>
                     </div>
                 </div>
@@ -59,5 +64,8 @@ add_animal
     </form>
 </div>
 
+{% block javascript %}
+<script type="text/javascript" src="../static/phone_valid.js"></script>
+{%endblock%}
 
 {%endblock%}
