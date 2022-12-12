@@ -137,7 +137,7 @@ def login():
         return redirect(url_for('profile'))
 
     if request.method == 'POST':
-        req = request.form['login']
+        req = phone_parser(request.form['login'])
         if req == '':
             req = 0
         user = database.get_doctor(req)

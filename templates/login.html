@@ -8,13 +8,15 @@ login
 <div class="container">
     <div class="container_login p-3 m-5 shadow-lg rounded-3 mx-auto">
         <h3 class="label_login mb-3">Авторизация</h3>
-        <form action="/login" class="mx-auto" method="POST">
+        <form action="/login" class="mx-auto form-request" method="POST">
             <div class="form-group d-flex flex-column  justify-content-center mx-auto">
                 <div class="mb-3 ">
-                    <input type="number" name="login" class="form-control" id="exampleInputEmail1" placeholder="Логин">
+                    <input type="numeric" name="login" class="form-control  phone-field" id="exampleInputEmail1" 
+                    placeholder="Номер телефона" minlength="10" required="true">
                 </div>
                 <div class="mb-5">
-                    <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Пароль">
+                    <input type="password" name="password" class="form-control"
+                     id="exampleInputPassword1" placeholder="Пароль" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Войти</button> 
                
@@ -22,4 +24,9 @@ login
         </form>
     </div>
 </div>
+
+{% block javascript %}
+<script type="text/javascript" src="../static/phone_valid.js"></script>
+{%endblock%}
+
 {%endblock%}

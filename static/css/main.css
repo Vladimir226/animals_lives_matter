@@ -137,6 +137,11 @@ ul{
      font-weight: 700;
      font-size: 30px;
  }
+ .btn-red-bigest:hover 
+ {
+    border: 0px solid rgb(92, 92, 92);
+    transform: scale(1.05);
+ }
  /* .btn-red-bigest-container
  {
 
