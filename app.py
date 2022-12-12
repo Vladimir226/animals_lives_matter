@@ -100,9 +100,9 @@ def admissions_history():
 @app.route('/add_admission/<int:animal_id>', methods=['POST', 'GET'])
 @login_required
 def add_admission(animal_id):
-    
+
     if request.method == 'POST':
-        
+
         date = request.form['date']
         time = request.form.get('clock')
         description = request.form['description']
@@ -142,7 +142,7 @@ def login():
             req = 0
         user = database.get_doctor(req)
         if user and check_password_hash(user['password'], request.form['password']):
-            userlogin = UserLogin().create(user)
+            userlogin = UserLogin().create(user, database.session_id)
             login_user(userlogin)
             return redirect(url_for('profile'))
 
@@ -233,9 +233,9 @@ def add_animal(client_id):
 @login_required
 def super_doctor():
     if request.method == 'POST':
-        database.delete_database()
-        logout_user()
-        return redirect(url_for('/'))
+        # database.delete_database()
+        # logout_user()
+        return redirect(url_for('/profile'))
     return render_template('super_profile.html', doctors=database.get_all_doctors())
 
 @app.route('/add_doctor', methods=['POST', 'GET'])

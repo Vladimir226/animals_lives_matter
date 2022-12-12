@@ -18,6 +18,7 @@ class ALM:
         self.port = port
         self.dbname = dbname
         self.status = False
+        self.session_id = 0
         self.start_connection()
 
     def start_connection(self):
@@ -888,3 +889,4 @@ class ALM:
         self.cursor.close()
         self.engine.dispose()
         self.status = False
+        self.session_id += 1
