@@ -18,7 +18,6 @@ class ALM:
         self.port = port
         self.dbname = dbname
         self.status = False
-        self.session_id = 0
         self.start_connection()
 
     def start_connection(self):
@@ -42,6 +41,7 @@ class ALM:
         self.set_delete_function()
 
         self.status = True
+        self.insert_doctor('0000000000', 'Профессор', 'xxx', 'Супер', 'Доктор')
 
     def check_connection(self):
         if not self.status:
@@ -889,4 +889,3 @@ class ALM:
         self.cursor.close()
         self.engine.dispose()
         self.status = False
-        self.session_id += 1

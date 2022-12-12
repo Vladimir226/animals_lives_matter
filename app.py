@@ -59,7 +59,7 @@ def phone_parser(phone):
 @login_manager.user_loader
 def load_user(user_phone):
     print("loader user")
-    return UserLogin().fromDB(user_phone, database)
+    return UserLogin().fromDB(user_phone)
 
 
 @app.teardown_appcontext
@@ -84,8 +84,10 @@ doctors.append(doctor_0)
 @app.before_request
 def before_request():
     g.auth = current_user.is_authenticated
-    print(current_user.is_authenticated)
-
+    if current_user.is_authenticated:
+        if database.get_doctor(current_user.get_id()) == {}:
+            logout_user()
+            return redirect(url_for('profile'))
 
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
@@ -171,7 +173,7 @@ def login():
             req = 0
         user = database.get_doctor(req)
         if user and check_password_hash(user['password'], request.form['password']):
-            userlogin = UserLogin().create(user, database.session_id)
+            userlogin = UserLogin().create(user['phone_number'])
             login_user(userlogin)
             return redirect(url_for('profile'))
         else:
@@ -262,9 +264,8 @@ def add_animal(client_id):
 @login_required
 def super_doctor():
     if request.method == 'POST':
-        # database.delete_database()
-        # logout_user()
-        print('hello!')
+        database.delete_database()
+        logout_user()
         return redirect(url_for('profile'))
     return render_template('super_profile.html', doctors=database.get_all_doctors())
 
