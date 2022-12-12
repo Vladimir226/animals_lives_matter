@@ -93,13 +93,19 @@ def admissions_history():
 @app.route('/add_admission/<int:animal_id>', methods=['POST', 'GET'])
 @login_required
 def add_admission(animal_id):
+    print('WTFWTFWTFWTFWTFWTFWTWF')
     if request.method == 'POST':
+        print('lllfgfffffffffffffffffffffffffffffffffflol')
+        print(request.form['date'])
+        print(request.form.get('clock'))
+        date = request.form['date']
+        time = request.form.get('clock')
         description = request.form['description']
         research = request.form['research']
         diagnosis = request.form['diagnosis']
         recommendation = request.form['recommendation']
         doctor_id = database.get_doctor(current_user.get_id())['id']
-        database.insert_reception(animal_id, doctor_id, '2022-12-11', '19:00:00', description,
+        database.insert_reception(animal_id, doctor_id, date, time, description,
                                   research, diagnosis, recommendation)
         return redirect(url_for('admissions', animal_id=animal_id))
     return render_template('add_admission.html', animal_id=animal_id)

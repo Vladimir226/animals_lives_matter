@@ -22,6 +22,9 @@ $(document).ready(function () {
             $('#field-set-date').attr('disabled', 'True');
         }
     })
+    $('#btn_add_admission_submit').on("click", function () {
+        $('#field-set-date').removeAttr("disabled");
+    })
 
     // скрипт вычисляющий текущую дату и вставляющий ее в страницу
     
