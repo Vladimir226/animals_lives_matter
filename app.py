@@ -287,11 +287,5 @@ def add_doctor():
 def not_found_error(error):
     return redirect('https://www.youtube.com/watch?v=wxQV4rP-mJY#t=00m30s')
 
-# @app.route('/search/result')
-# @login_required
-# def search_result():
-#     searcher = request.args['searcher']
-#     return render_template("search_result.html", persons = database.get_by_last_name(searcher))
-
 if __name__ == "__main__":
     app.run(debug=False)

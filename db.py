@@ -59,8 +59,7 @@ class ALM:
            PERFORM dblink_exec('dbname=' || current_database() || ' user={self.user} password={self.password}',
            'CREATE DATABASE ' || quote_ident(dbname));
         END IF;
-
-        END
+        END;
         $func$ LANGUAGE plpgsql;
         """
         self.cursor.execute(query_create)
@@ -135,7 +134,6 @@ class ALM:
         
         CREATE INDEX IF NOT EXISTS animal_id ON reception(animal_id);
         CREATE INDEX IF NOT EXISTS doctor_id ON reception(doctor_id);
-        
         $$ LANGUAGE SQL;
         """
         self.cursor.execute(query_create)
@@ -191,7 +189,7 @@ class ALM:
            VALUES (new_phone_number, new_surname, new_name, new_patronymic);
            RETURN 'Successfully';
         END IF;
-        END
+        END;
         $func$ LANGUAGE plpgsql;
         """
         self.cursor.execute(query_create)
@@ -217,7 +215,7 @@ class ALM:
         ELSE
            RETURN 'Owner does not exist';
         END IF;
-        END
+        END;
         $func$ LANGUAGE plpgsql;
         """
         self.cursor.execute(query_create)
@@ -241,7 +239,7 @@ class ALM:
             new_password);
             RETURN 'Successfully';
         END IF;
-        END
+        END;
         $func$ LANGUAGE plpgsql;
         """
         self.cursor.execute(query_create)
@@ -272,7 +270,7 @@ class ALM:
         ELSE
             RETURN 'Doctor does not exist';
         END IF;
-        END
+        END;
         $func$ LANGUAGE plpgsql;
         """
         self.cursor.execute(query_create)
@@ -372,7 +370,7 @@ class ALM:
                 res[i] = ''.join(res[i])
                 res[i] = res[i].replace('""', '"')
             else:
-                res[i] = None
+                res[i] = ''
         return res
 
     def set_select_functions(self):
@@ -864,13 +862,19 @@ class ALM:
         RETURNS void AS
         $func$
         BEGIN
+        
+        PERFORM pg_terminate_backend(pg_stat_activity.pid)
+            FROM pg_stat_activity
+            WHERE pg_stat_activity.datname = dbname
+            AND pid <> pg_backend_pid();
+        
         IF EXISTS (SELECT 1 FROM pg_database WHERE datname = dbname) THEN
            PERFORM dblink_exec('dbname=' || current_database() || ' user={self.user} password={self.password}',
            'DROP DATABASE ' || quote_ident(dbname));
         ELSE
             RAISE NOTICE 'Database does not exist';
         END IF;
-        END
+        END;
         $func$ LANGUAGE plpgsql;
         """
         self.cursor.execute(query_create)
