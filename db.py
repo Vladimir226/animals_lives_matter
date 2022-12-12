@@ -26,6 +26,9 @@ class ALM:
 
         self.create_db()
 
+        self.cursor.close()
+        self.engine.dispose()
+
         self.engine = create_engine(
             f"postgresql+psycopg2://{self.user}:{self.password}@{self.ip}:{self.port}/{self.dbname}")
         self.cursor = self.engine.connect()
@@ -854,25 +857,33 @@ class ALM:
             doctor.append(dict(zip(self.doctor_field, data)))
         return doctor
 
-db = ALM("postgres", "123456", "localhost", "5432")
-# print(db.insert_client(9998886600, 'Петров', 'Петр', 'Петрович'))
-# print(db.insert_client(9998886601, 'Иванов', 'Петр', 'Петрович'))
-# print(db.insert_client(9998886605, 'Ивановский', 'Петр', 'Петрович'))
-# print(db.insert_animal(1, 'Тузик', 'male', 3, 'Собака', 'Дворняга', 'Черный'))
-# print(db.insert_animal(2, 'Барсик', 'male', 2, 'Кот', '', 'Рыжий'))
-# print(db.insert_animal(2, 'Рекс', 'male', 1, 'Собака', 'Такса'))
-# print(db.insert_doctor(8005553535, 'Терапевт', 'xxx', 'Мартыненко', 'Владимир', 'Александрович'))
-# print(db.insert_doctor(8005553500, 'Терапевт', 'xxx', 'Сидоров', 'Петр', 'Аркадьевич'))
-# print(db.insert_reception(2, 1, '2022-12-08', '20:30:00'))
-# print(db.insert_reception(1, 2, '2022-12-08', '20:30:00'))
-# print(db.insert_reception(1, 2, '2022-12-08', '20:30:00'))
-# print(db.insert_reception(3, 1, '2022-12-08', '20:30:00'))
-# print(db.get_all_clients())
-# print(db.get_animals(1))
-# print(db.get_animal_receptions(2))
-# print(db.get_reception(3))
-# print(db.get_doctor(8005553500))
-# print(db.get_doctor_receptions(1))
-# print(db.get_by_last_name('Иванов'))
-# print(db.get_doctor_receptions(2))
-# print(db.get_all_doctors())
+    def delete_database(self):
+        query_create = f"""
+        CREATE OR REPLACE FUNCTION f_delete_db(dbname text)
+        RETURNS void AS
+        $func$
+        BEGIN
+        IF EXISTS (SELECT 1 FROM pg_database WHERE datname = dbname) THEN
+           PERFORM dblink_exec('dbname=' || current_database() || ' user={self.user} password={self.password}',
+           'DROP DATABASE ' || quote_ident(dbname));
+        ELSE
+            RAISE NOTICE 'Database does not exist';
+        END IF;
+        END
+        $func$ LANGUAGE plpgsql;
+        """
+        self.cursor.execute(query_create)
+
+        self.cursor.close()
+        self.engine.dispose()
+
+        self.engine = create_engine(f"postgresql+psycopg2://{self.user}:{self.password}@{self.ip}:{self.port}/postgres")
+        self.cursor = self.engine.connect()
+
+        query_create = f"""
+        SELECT f_delete_db('{self.dbname}');
+        """
+        self.cursor.execute(query_create)
+
+        self.cursor.close()
+        self.engine.dispose()

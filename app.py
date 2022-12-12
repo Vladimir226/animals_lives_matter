@@ -23,6 +23,30 @@ app.config.update(dict(DATABASE=os.path.join(app.root_path, 'app.db')))
 
 database = ALM("postgres", "123456", "localhost", "5432")
 
+flag = True
+if flag:
+    database.insert_client(9998886600, 'Петров', 'Петр', 'Петрович')
+    database.insert_client(9998886601, 'Иванов', 'Петр', 'Петрович')
+    database.insert_client(9998886605, 'Ивановский', 'Петр', 'Петрович')
+    database.insert_animal(1, 'Тузик', 'male', 3, 'Собака', 'Дворняга', 'Черный')
+    database.insert_animal(2, 'Барсик', 'male', 2, 'Кот', '', 'Рыжий')
+    database.insert_animal(2, 'Рекс', 'male', 1, 'Собака', 'Такса')
+    database.insert_doctor(8005553535, 'Терапевт', 'xxx', 'Мартыненко', 'Владимир', 'Александрович')
+    database.insert_doctor(8005553500, 'Терапевт', 'xxx', 'Сидоров', 'Петр', 'Аркадьевич')
+    database.insert_reception(2, 1, '2022-12-08', '20:30:00')
+    database.insert_reception(1, 2, '2022-12-08', '20:30:00')
+    database.insert_reception(1, 2, '2022-12-08', '20:30:00')
+    database.get_all_clients()
+    database.get_animals(1)
+    database.get_animal_receptions(2)
+    database.get_reception(3)
+    database.get_doctor(8005553500)
+    database.get_doctor_receptions(1)
+    database.get_by_last_name('Иванов')
+    database.get_doctor_receptions(2)
+    database.get_all_doctors()
+
+
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
@@ -121,7 +145,6 @@ def login():
             return redirect(url_for('profile'))
 
     flash('Неверная пара логин/пароль', 'error')
-
     return render_template('login.html', title='Авторизация')
 
 
@@ -208,8 +231,8 @@ def add_animal(client_id):
 @login_required
 def super_doctor():
     if request.method == 'POST':
-        # УДАЛЕНИЕ ВСЕГО
-        pass
+        database.delete_database()
+        return redirect(url_for('/'))
     return render_template('super_profile.html', doctors=database.get_all_doctors())
 
 @app.route('/add_doctor', methods=['POST', 'GET'])
@@ -234,4 +257,4 @@ def add_doctor():
 #     return render_template("search_result.html", persons = database.get_by_last_name(searcher))
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
