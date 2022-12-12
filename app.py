@@ -285,7 +285,7 @@ def add_doctor():
 
 @app.errorhandler(404)
 def not_found_error(error):
-    return redirect('https://www.youtube.com/watch?v=wxQV4rP-mJY#t=00m30s')
+    return redirect('https://youtu.be/wxQV4rP-mJY?t=215')
 
 if __name__ == "__main__":
     app.run(debug=False)
