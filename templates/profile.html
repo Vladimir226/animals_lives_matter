@@ -7,7 +7,10 @@
 {%block body%}
 <div class="profile p-3 mt-5 shadow-lg rounded-3">
     <div class="profile-header d-flex justify-content-between mb-2">
-        <h3 class="profile-title">Личная информация</h3>
+        <h3 class="profile-title flex-grow-1">Личная информация</h3>
+        {%if doctor.phone_number == '0' %}
+        <a href="{{url_for('super_doctor')}}" class="btn btn-warning profile-btn-edit align-self-start me-2">Секретная кнопка</a>
+        {%endif%}
         <a href="{{url_for('edit_profile')}}" class="btn btn-warning profile-btn-edit align-self-start">Изменить</a>
     </div>
 
