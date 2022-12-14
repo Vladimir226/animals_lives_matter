@@ -23,21 +23,41 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 app.config.update(dict(DATABASE=os.path.join(app.root_path, 'app.db')))
 
-database = ALM("postgres", "123456", "localhost", "5432")
+database = ALM("usr", "123456", "localhost", "5432")
 
 flag = True
 if flag:
-    database.insert_client(9998886600, 'Петров', 'Петр', 'Петрович')
-    database.insert_client(9998886601, 'Иванов', 'Петр', 'Петрович')
-    database.insert_client(9998886605, 'Ивановский', 'Петр', 'Петрович')
-    database.insert_animal(1, 'Тузик', 'male', 3, 'Собака', 'Дворняга', 'Черный')
-    database.insert_animal(2, 'Барсик', 'male', 2, 'Кот', '', 'Рыжий')
-    database.insert_animal(2, 'Рекс', 'male', 1, 'Собака', 'Такса')
-    database.insert_doctor(8005553535, 'Терапевт', 'xxx', 'Мартыненко', 'Владимир', 'Александрович')
-    database.insert_doctor(8005553500, 'Терапевт', 'xxx', 'Сидоров', 'Петр', 'Аркадьевич')
-    database.insert_reception(2, 1, '2022-12-08', '20:30:00')
-    database.insert_reception(1, 2, '2022-12-08', '20:30:00')
-    database.insert_reception(1, 2, '2022-12-08', '20:30:00')
+    database.insert_client(9990000001, 'Петров', 'Петр', 'Петрович')
+    database.insert_client(9990000002, 'Иванов', 'Петр', 'Петрович')
+    database.insert_client(9990000003, 'Иванов', 'Петр', 'Петрович')
+    database.insert_client(9990000004, 'Ивановский', 'Петр', 'Петрович')
+
+    database.insert_animal(1, 'Тузик', 'male', 5, 'Псовые', 'Дворняга', 'Черный')
+    database.insert_animal(1, 'Буся', 'female', 1, 'Псовые', 'Акита-ину', 'Бело-рыжий')
+    database.insert_animal(1, 'Муся', 'female', 2, 'Кошачьи', 'Шотландская вислоухая', 'Бело-серый')
+    database.insert_animal(2, 'Рекс', 'male', 2, 'Псовые', 'Бульдог', 'Черный')
+    database.insert_animal(2, 'Кета', 'male', 1, 'Попугаевые', 'Ара', 'Разноцветный')
+    database.insert_animal(3, 'Ральф', 'female', 4, 'Псовые', 'Алабай', 'Белый')
+    database.insert_animal(3, 'Барсик', 'male', 2, 'Кошачьи', 'Абиссинская', 'Рыжий')
+    database.insert_animal(4, 'Пушок', 'male', 1, 'Хомяковые', 'Сирийский', 'Рыжий')
+    database.insert_animal(4, 'Омега', 'female', 1, 'Свинья', 'Карликовая домашняя', 'Белая')
+
+    database.insert_doctor(8000000001, 'Терапевт', 'xxx', 'Лебедев', 'Аркадий', 'Иванович')
+    database.insert_doctor(8000000002, 'Терапевт', 'xxx', 'Попов', 'Василий', 'Михайлович')
+    database.insert_doctor(8000000003, 'Хирург', 'xxx', 'Орлов', 'Александр', 'Вячеславович')
+
+    database.insert_reception(1, 4, '2022-12-01', '11:35:00', 'Рана на лапе', '', 'Ранение',
+                              'Смена повязки каждый день.')
+    database.insert_reception(1, 2, '2022-12-05', '10:30:00', 'Кашель', 'Анализ крови', 'Простуда',
+                     'Муколетики, тепло одеть собаку.')
+    database.insert_reception(1, 2, '2022-12-10', '10:30:00', 'Выписка с ОРЗ', 'Анализ крови', 'Здоров',
+                              'На прогулки одевать на животного одежду, гулять не более часа.')
+    database.insert_reception(2, 3, '2022-12-08', '9:30:00', 'Кашель', 'Анализ крови', 'Простуда',
+                              'Муколетики, тепло одеть собаку.')
+    database.insert_reception(3, 3, '2022-12-06', '10:30:00', 'Кошка чешется.', 'Анализ шерсти', 'Блохи',
+                              'Помыть кошку с специальным шампунем.')
+
+
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
