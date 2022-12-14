@@ -9,18 +9,11 @@ edit-profile
     <h3 class="edit-profile-title text-center mb-5">Редактирование профиля</h3>
     <form action="/edit_profile" class="mx-auto form-request" method="POST" enctype=multipart/form-data>
         <div class="edit-profile-container d-flex">
-            <div class="edit-avatar">
-                <div class="profile-img rounded-2 mb-3"></div>
-                <div class="form-group">
-                    <!-- <label for="choose-avatar">Загрузить аватар</label> -->
-                    <input type="file" name="file" class="form-control-file" id="choose-avatar">
-                    {%for msg in get_flashed_messages()%}
-                    <div class="flash text-center mb-3">{{msg}}</div>
-                    {%endfor%}
-                </div>
+           
             </div>
             <div class="edit-info flex-grow-1">
                 <div class="row">
+                    <div class="col-2"></div>
                     <div class="col-8">
                         <label for="surname-edit-profile">Фамилия: </label>
                         <input name="surname" type="text" value="{{doctor.surname}}" class="form-control"
@@ -36,6 +29,7 @@ edit-profile
                         {# </div>#}
                 </div>
                 <div class="row">
+                    <div class="col-2"></div>
                     <div class="col-8">
                         <label for="name-edit-profile">Имя: </label>
                         <input name="name" type="text" value="{{ doctor.name }}" class="form-control"
@@ -45,6 +39,7 @@ edit-profile
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-2"></div>
                     <div class="col-8">
                         <label for="patronymic-edit-profile">Отчество: </label>
                         <input name="patronymic" type="text" value="{{ doctor.patronymic }}" class="form-control"
@@ -55,6 +50,7 @@ edit-profile
                 </div>
 
                 <div class="row">
+                    <div class="col-2"></div>
                     <div class="col-8">
                         <label for="specialization-edit-profile">Специальность:</label>
                         <input name="qualification" type="text" value="{{ doctor.qualification }}" class="form-control"
@@ -70,9 +66,9 @@ edit-profile
                         placeholder="Расскажите о себе"></textarea>#}
                     {# </div>#}
             </div>
-        </div>
-        <div class="d-flex justify-content-end">
-            <button type="submit" class="btn btn-primary ">Сохранить данные</button>
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary ">Сохранить данные</button>
+            </div>
         </div>
     </form>
 
