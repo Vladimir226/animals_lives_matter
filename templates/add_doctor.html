@@ -9,15 +9,9 @@ add_doctor
     <h3 class="edit-profile-title text-center mb-5">Добавление доктора</h3>
     <form action="/add_doctor" class="mx-auto form-request" method="POST">
         <div class="edit-profile-container d-flex">
-            <div class="edit-avatar">
-                <div class="profile-img rounded-2 mb-3"></div>
-                <div class="form-group">
-                    <!-- <label for="choose-avatar">Загрузить аватар</label> -->
-                    <input type="file" class="form-control-file" id="choose-avatar">
-                </div>
-            </div>
             <div class="edit-info flex-grow-1">
                 <div class="row">
+                    <div class="col-4"></div>
                     <div class="col-4">
                         <label for="phone-add-doctor">Номер телефона:</label>
                         <input type="numeric" name="phone" class="form-control phone-field" id="phone-add-doctor"
@@ -28,6 +22,7 @@ add_doctor
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-4"></div>
                     <div class="col-4">
                         <label for="phone-add-doctor">Пароль:</label>
                         <input type="password" name="password" class="form-control password-valid password" id="phone-add-doctor"
@@ -36,7 +31,8 @@ add_doctor
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-4"></div>
+                    <div class="col-4">
                         <label for="surname-add-doctor">Фамилия: </label>
                         <input name="surname" type="text"  class="form-control"
                             id="surname-add-doctor" aria-describedby="surname-add-doctor"
@@ -45,7 +41,8 @@ add_doctor
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-4"></div>
+                    <div class="col-4">
                         <label for="name-add-doctor">Имя: </label>
                         <input name="name" type="text"  class="form-control"
                             id="name-add-doctor" aria-describedby="name-add-doctor" placeholder="Введите имя" required>
@@ -53,7 +50,8 @@ add_doctor
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-4"></div>
+                    <div class="col-4">
                         <label for="patronymic-add-doctor">Отчество: </label>
                         <input name="patronymic" type="text"  class="form-control"
                             id="patronymic-add-doctor" aria-describedby="patronymic-v"
@@ -63,7 +61,8 @@ add_doctor
                 </div>
 
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-4"></div>
+                    <div class="col-4">
                         <label for="specialization-add-doctor">Специальность:</label>
                         <input name="qualification" type="text"  class="form-control"
                             id="specialization-add-doctor" aria-describedby="specialization-add-doctor"
@@ -79,6 +78,9 @@ add_doctor
                     {# </div>#}
             </div>
         </div>
+        {%for msg in get_flashed_messages()%}
+                <div class="flash text-center mb-3">{{msg}}</div>
+        {%endfor%}
         <div class="d-flex justify-content-end">
             <button type="submit" class="btn btn-primary ">Добавить</button>
         </div>

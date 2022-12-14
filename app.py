@@ -23,7 +23,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 app.config.update(dict(DATABASE=os.path.join(app.root_path, 'app.db')))
 
-database = ALM("usr", "123456", "localhost", "5432")
+database = ALM("postgres", "123456", "localhost", "5432")
 
 flag = True
 if flag:
@@ -264,8 +264,10 @@ def add_client():
         name = request.form['name']
         patronymic = request.form['patronymic']
         phone = phone_parser(request.form['phone'])
-        database.insert_client(phone, surname, name, patronymic)
-        return redirect(url_for('alm_library'))
+        if database.insert_client(phone, surname, name, patronymic) != 'Successfully':
+            flash('Клиент с таким номером телефона уже существует!')
+        else :
+            return redirect(url_for('alm_library'))
     return render_template("add_client.html")
 
 
@@ -309,8 +311,10 @@ def add_doctor():
         phone = phone_parser(request.form['phone'])
         password = request.form['password']
         qualification = request.form['qualification']
-        database.insert_doctor(phone, qualification, password, surname, name, patronymic)
-        return redirect(url_for('super_doctor'))
+        if database.insert_doctor(phone, qualification, password, surname, name, patronymic) != 'Successfully':
+            flash('Доктор с таким номером телефона уже существует!')
+        else:
+            return redirect(url_for('super_doctor'))
     return render_template('add_doctor.html')
 
 

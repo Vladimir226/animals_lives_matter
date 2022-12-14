@@ -51,6 +51,9 @@ add_client
                     </div>
                 </div>
             </div>
+            {%for msg in get_flashed_messages()%}
+                <div class="flash text-center mb-3">{{msg}}</div>
+            {%endfor%}
             <div class="d-flex justify-content-center mx-auto my-3">
                 <button type="submit" class="btn btn-primary ">Добавить</button>
             </div>
