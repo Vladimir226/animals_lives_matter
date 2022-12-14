@@ -337,7 +337,7 @@ ELSE
     CREATE OR REPLACE FUNCTION get_by_last_name(to_find text)
     RETURNS SETOF client
     AS $$
-    SELECT * FROM client WHERE surname = to_find;
+    SELECT * FROM client WHERE surname LIKE to_find || ''%'';
     $$ LANGUAGE SQL;
 
     CREATE OR REPLACE FUNCTION get_client(check_id integer)
