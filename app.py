@@ -23,9 +23,6 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 app.config.update(dict(DATABASE=os.path.join(app.root_path, 'app.db')))
 
-# login_manager = LoginManager(app)
-
-
 database = ALM("postgres", "123456", "localhost", "5432")
 
 flag = True
@@ -46,7 +43,6 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
 
-# парсер номера телефона
 def phone_parser(phone):
     phone = phone[2:].replace('(', "")
     phone = phone.replace(')', "")
@@ -54,8 +50,6 @@ def phone_parser(phone):
     return phone
 
 
-# login_manager.login_message = 'Авторизуйтесь для доступа к закрытым сессия'
-# login_manager.login_message_category = 'success'
 @login_manager.user_loader
 def load_user(user_phone):
     print("loader user")
@@ -93,7 +87,6 @@ def before_request():
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-    # db= get_db()
     doc = database.get_doctor(current_user.get_id())
     return render_template("profile.html", doctor=doc, receptions=database.get_doctor_receptions(doc['id'])[:5])
 
@@ -131,31 +124,13 @@ def allowed_file(filename):
 @login_required
 def edit_profile():
     if request.method == 'POST':
-
-        # загрузка изображения
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            flash("Ура!")
-            # return redirect(url_for('profile'))
-        else:
-            flash('Что-то пошло не так')
-
-        # вот тут данные из формы
         id = database.get_doctor(current_user.get_id())['id']
         surname = request.form['surname']
         name = request.form['name']
         patronymic = request.form['patronymic']
         qualification = request.form['qualification']
         database.update_doctor_info(id, surname, name, patronymic, qualification)
-        # return redirect(url_for('profile'))
+        return redirect(url_for('profile'))
     return render_template('edit_profile.html', doctor=database.get_doctor(current_user.get_id()))
 
 
@@ -197,7 +172,6 @@ def alm_library():
 @login_required
 def alm_animals(id):
     if request.method == 'POST':
-        # вот тут по id удаляй клиента, т.к. нажата кнопка. Из реквеста брать ничего не надо.
         database.delete_client(id)
         return redirect(url_for('alm_library'))
     return render_template('alm_animals.html', animals=database.get_animals(id),
@@ -220,7 +194,6 @@ def admission(reception_id):
 @login_required
 def search():
     if request.method == 'POST':
-        # вот тут надо вызвать селекты и в persons закинуть результат поиска
         searcher = request.form['search']
         return redirect(url_for('search', searcher=searcher, status='progress'))
     searcher = request.args['searcher']
