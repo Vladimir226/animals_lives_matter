@@ -42,7 +42,7 @@ class ALM:
 
     def create_db(self):
         query_create = f"""
-        SELECT f_create_db('{self.dbname}');
+        SELECT f_create_db('{self.dbname}, {self.user}, {self.password}');
         """
         self.cursor.execute(query_create)
 
@@ -308,7 +308,7 @@ class ALM:
         self.cursor = self.engine.connect()
 
         query_create = f"""
-        SELECT f_delete_db('{self.dbname}');
+        SELECT f_delete_db('{self.dbname}, {self.user}, {self.password}');
         """
         self.cursor.execute(query_create)
 

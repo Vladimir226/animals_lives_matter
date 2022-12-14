@@ -1,14 +1,14 @@
-CREATE OR REPLACE FUNCTION f_create_db(dbname text)
+CREATE OR REPLACE FUNCTION f_create_db(dbname text, usr text, passwd text)
 RETURNS void AS
 $func$
 BEGIN
 IF EXISTS (SELECT 1 FROM pg_database WHERE datname = dbname) THEN
    RAISE NOTICE 'Database already exists';
 ELSE
-    PERFORM dblink_exec('dbname=' || current_database() || ' user=usr password=123456',
+    PERFORM dblink_exec('dbname=' || current_database() || ' user=' || usr || ' password=' || passwd,
     'CREATE DATABASE ' || quote_ident(dbname));
    
-    PERFORM dblink_connect('connection', 'dbname=' || quote_ident(dbname) || ' user=usr password=123456');
+    PERFORM dblink_connect('connection', 'dbname=' || quote_ident(dbname) || ' user=' || usr || ' password=' || passwd);
    
     PERFORM dblink_exec('connection', 'BEGIN');
 
@@ -394,7 +394,7 @@ END IF;
 END;
 $func$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION f_delete_db(dbname text)
+CREATE OR REPLACE FUNCTION f_delete_db(dbname text, usr text, passwd text)
 RETURNS void AS
 $$
 BEGIN
@@ -405,7 +405,7 @@ PERFORM pg_terminate_backend(pg_stat_activity.pid)
     AND pid <> pg_backend_pid();
 
 IF EXISTS (SELECT 1 FROM pg_database WHERE datname = dbname) THEN
-    PERFORM dblink_exec('dbname=' || current_database() || ' user=usr password=123456',
+    PERFORM dblink_exec('dbname=' || current_database() || ' user=' || usr || ' password=' || passwd,
     'DROP DATABASE ' || quote_ident(dbname));
 ELSE
     RAISE NOTICE 'Database does not exist';
