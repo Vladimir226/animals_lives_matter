@@ -10,7 +10,7 @@ from db import *
 from UserLogin import UserLogin
 
 # configurate
-UPLOAD_FOLDER = '/path/to/the/uploads'
+UPLOAD_FOLDER = ''
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 DATABASE = '/tmp/app.db'
 DEBUG = True
@@ -143,9 +143,8 @@ def edit_profile():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            send_from_directory(app.config['UPLOAD_FOLDER'],
-                                filename)
-            return redirect(url_for('profile'))
+            flash("Ура!")
+            # return redirect(url_for('profile'))
         else:
             flash('Что-то пошло не так')
 
@@ -156,7 +155,7 @@ def edit_profile():
         patronymic = request.form['patronymic']
         qualification = request.form['qualification']
         database.update_doctor_info(id, surname, name, patronymic, qualification)
-        return redirect(url_for('profile'))
+        # return redirect(url_for('profile'))
     return render_template('edit_profile.html', doctor=database.get_doctor(current_user.get_id()))
 
 

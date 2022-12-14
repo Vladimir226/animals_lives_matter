@@ -1,65 +1,71 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    super doctor
+super doctor
 {% endblock %}
 
 {% block body %}
-    <div class="list-receptions mt-5">
-        <h3 class="list-title text-center">Кабинет супер-доктора</h3>
-        <div class="row justify-content-md-center">
-            <div class="shadow p-3 rounded-3 m-3  mx-3 btn-red-bigest-container col-auto d-flex">
-                <div class="owners_about d-flex flex-column d-flex justify-content-between">
-                    <h4>Разработчики</h4>
-                    <div class="owners_text">
-                        - Илья Антонов (antonov1lya) <br>
-                        - Мартыненко Владимир (Vladimir226)
-                    </div>
-                    <div class="">
-                        Если после нажатия "Большой красной кнопки" <br>
-                        что-то сломалось - разработчикам не писать!
-                    </div>
+<div class="list-receptions mt-5">
+    <h3 class="list-title text-center">Кабинет супер-доктора</h3>
+    <div class="row justify-content-md-center">
+        <div class="shadow p-3 rounded-3 m-3  mx-3 btn-red-bigest-container col-auto d-flex">
+            <div class="owners_about d-flex flex-column d-flex justify-content-between">
+                <h4>Разработчики</h4>
+                <div class="owners_text">
+                    - Илья Антонов (antonov1lya) <br>
+                    - Мартыненко Владимир (Vladimir226)
                 </div>
-                <form action="/super_doctor" method="POST" class="col-auto">
-                    <button type="submit" class="btn-red-bigest">Удалить всё!</button>
-                </form>
+                <div class="">
+                    Если после нажатия "Большой красной кнопки" <br>
+                    что-то сломалось - разработчикам не писать!
+                </div>
+            </div>
+            <form action="/super_doctor" method="POST" class="col-auto">
+                <button type="submit" class="btn-red-bigest">Удалить всё!</button>
+            </form>
+        </div>
+    </div>
+
+    <h3 class="list-title text-center">Врачи</h3>
+
+    <div class="d-flex flex-column">
+        {% for doctor in doctors %}
+        <div class="h-reception shadow p-3 rounded-3 m-3 ">
+            <div class="h-reception-container d-flex align-items-center">
+                <div class="profile-img rounded-2"><img src="../static/icons/noavatar.jpeg" class="img-avatar" alt="">
+                </div>
+                <div class="h-reception-info   p-2 border border-2 rounded-2 flex-grow-1 align-self-stretch ms-2">
+                    <ul class="h-reception-ul ">
+                        <li class="full-name">
+                            <h6 class="d-inline">ФИО:</h6>
+                            <div class="text d-inline"> {{doctor.surname}} {{ doctor.name }} {{ doctor.patronymic }}
+                            </div>
+                        </li>
+                        <li class="phone">
+                            <h6 class="d-inline">Номер телефона:</h6>
+                            <div class="text d-inline">+7{{ doctor.phone_number }}</div>
+                        </li>
+                        <li class="specialization">
+                            <h6 class="d-inline">Специальность:</h6>
+                            <div class="text d-inline">{{doctor.qualification}}</div>
+                        </li>
+                        <li class="receptions_number">
+                            <h6 class="d-inline">Количество посещений:</h6>
+                            <div class="text d-inline">{{ doctor.receptions_number }}</div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
-
-        <h3 class="list-title text-center">Врачи</h3>
-
-        <div class="d-flex flex-column">
-            {% for doctor in doctors %}
-                <div class="h-reception shadow p-3 rounded-3 m-3 ">
-                    <div class="h-reception-container d-flex align-items-center">
-                        <div class="h-reception-img rounded-2 "></div>
-                        <div class="h-reception-info   p-2 border border-2 rounded-2 flex-grow-1 ms-2">
-                            <ul class="h-reception-ul ">
-                                <li class="full-name">
-                                    <h6 class="d-inline">ФИО:</h6>
-                                    <div class="text d-inline"> {{doctor.surname}} {{ doctor.name }} {{ doctor.patronymic }}</div>
-                                </li>
-                                <li class="phone">
-                                    <h6 class="d-inline">Номер телефона:</h6>
-                                    <div class="text d-inline">+7{{ doctor.phone_number }}</div>
-                                </li>
-                                <li class="receptions_number">
-                                    <h6 class="d-inline">Количество посещений:</h6>
-                                    <div class="text d-inline">{{ doctor.receptions_number }}</div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-
+        {% endfor %}
     </div>
-    <a href="{{ url_for('add_doctor') }}" class="library-a text-decoration-none text-reset">
-        <div class="btn-plus-reception shadow-sm bg-primary w-25 mx-auto rounded-3 d-flex py-1 my-5">
-            <img src="../static/icons/plus.svg" class="img-plus-reception">
-            <div class="text-nowrap text-center flex-grow-1 align-self-center text-light">Добавить доктора</div>
-        </div>
-    </a>
+
+</div>
+<a href="{{ url_for('add_doctor') }}" class="library-a text-decoration-none text-reset">
+    <div class="btn-plus-reception shadow-sm bg-primary w-25 mx-auto rounded-3 d-flex py-1 my-5">
+        <img src="../static/icons/plus.svg" class="img-plus-reception">
+        <div class="text-nowrap text-center flex-grow-1 align-self-center text-light">Добавить доктора</div>
+    </div>
+</a>
 
 {% endblock %}
