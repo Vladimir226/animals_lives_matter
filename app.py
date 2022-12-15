@@ -23,7 +23,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 app.config.update(dict(DATABASE=os.path.join(app.root_path, 'app.db')))
 
-database = ALM("postgres", "123456", "localhost", "5432")
+database = ALM("usr", "123456", "localhost", "5432")
 
 flag = True
 if flag:
