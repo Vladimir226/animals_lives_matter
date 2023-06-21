@@ -55,3 +55,5 @@ class TestSQLQuery(unittest.TestCase):
         del test['password']
         answer = {'phone_number': '8000000002', 'id': '3', 'surname': 'Попов', 'name': 'Василий', 'patronymic': 'Михайлович', 'qualification': 'Терапевт'}
         self.assertEqual(test, answer)
+
+unittest.main()
