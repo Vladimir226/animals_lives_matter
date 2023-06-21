@@ -18,3 +18,18 @@ class TestSQLParser(unittest.TestCase):
         test = '(37,13,1,2023-06-21,04:27:00,,,,,0,1,,Доктор,)'
         answer = ['37', '13', '1', '2023-06-21', '04:27:00' , '', '', '', '', '0', '1', '', 'Доктор', '']
         self.assertEqual(ALM.sql_parser(test), answer)
+
+class TestSQLQuery(unittest.TestCase):
+    def test_query(self):
+        database = ALM("usr", "123456", "localhost", "5432")
+        
+        test = database.get_client(1)
+        del test['receptions_number']
+        answer = {'phone_number': 9990000001, 'id': '1', 'surname': 'Петров', 'name': 'Петр', 'patronymic': 'Петрович'}
+        self.assertEqual(test, answer)
+
+        test = database.get_doctor(8000000003)
+        del test['receptions_number']
+        del test['password']
+        answer = {'phone_number': '8000000003', 'id': '4', 'surname': 'Орлов', 'name': 'Александр', 'patronymic': 'Вячеславович', 'qualification': 'Хирург'}
+        self.assertEqual(test, answer)
