@@ -28,8 +28,30 @@ class TestSQLQuery(unittest.TestCase):
         answer = {'phone_number': 9990000001, 'id': '1', 'surname': 'Петров', 'name': 'Петр', 'patronymic': 'Петрович'}
         self.assertEqual(test, answer)
 
+        test = database.get_client(2)
+        del test['receptions_number']
+        answer = {'phone_number': 9990000002, 'id': '2', 'surname': 'Иванов', 'name': 'Петр', 'patronymic': 'Петрович'}
+        self.assertEqual(test, answer)
+
+        test = database.get_client(3)
+        del test['receptions_number']
+        answer = {'phone_number': 9990000003, 'id': '3', 'surname': 'Иванов', 'name': 'Петр', 'patronymic': 'Петрович'}
+        self.assertEqual(test, answer)
+
         test = database.get_doctor(8000000003)
         del test['receptions_number']
         del test['password']
         answer = {'phone_number': '8000000003', 'id': '4', 'surname': 'Орлов', 'name': 'Александр', 'patronymic': 'Вячеславович', 'qualification': 'Хирург'}
+        self.assertEqual(test, answer)
+
+        test = database.get_doctor(8000000001)
+        del test['receptions_number']
+        del test['password']
+        answer = {'phone_number': '8000000001', 'id': '2', 'surname': 'Лебедев', 'name': 'Аркадий', 'patronymic': 'Иванович', 'qualification': 'Терапевт'}
+        self.assertEqual(test, answer)
+
+        test = database.get_doctor(8000000002)
+        del test['receptions_number']
+        del test['password']
+        answer = {'phone_number': '8000000002', 'id': '3', 'surname': 'Попов', 'name': 'Василий', 'patronymic': 'Михайлович', 'qualification': 'Терапевт'}
         self.assertEqual(test, answer)
